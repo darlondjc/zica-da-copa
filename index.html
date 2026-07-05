@@ -948,14 +948,16 @@
   shareBtn.addEventListener('click',async()=>{
     if(!notes.length){toastMsg(T.toastNeedShare);return;}
     toastMsg(T.toastGenerating);
-    // copia o link já de cara (perto do clique, pra manter a permissão do navegador),
-    // assim quem for postar no story do Instagram só precisa colar, sem voltar no site
+    // copia o link em paralelo com a montagem da imagem: no mobile o navigator.share()
+    // só funciona perto do clique, então esperar o clipboard antes estourava esse prazo
+    // e o navegador caía direto no download em vez de abrir a folha de compartilhamento
     let linkCopied=false;
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      try{await navigator.clipboard.writeText(SITE_URL);linkCopied=true;}catch(err){}
-    }
+    const clipboardPromise=(navigator.clipboard&&navigator.clipboard.writeText)
+      ?navigator.clipboard.writeText(SITE_URL).then(()=>{linkCopied=true;}).catch(()=>{})
+      :Promise.resolve();
     try{
       const canvas=await buildShareCanvas();
+      await clipboardPromise;
       canvas.toBlob(async blob=>{
         if(!blob){toastMsg(T.toastShareFail);return;}
         const file=new File([blob],'geladeira-da-zica.png',{type:'image/png'});
