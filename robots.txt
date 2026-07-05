@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zica-da-copa.darlondjc.workers.dev/sitemap.xml
+Sitemap: https://zica-da-copa.darlon.workers.dev/sitemap.xml
