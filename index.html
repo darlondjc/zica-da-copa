@@ -799,7 +799,8 @@
     }catch(err){toastMsg(T.toastShareFail);console.error(err);}
   });
 
-  input.focus();
+  // em touch/mobile, focar o input de cara faz o navegador rolar a página e abrir o teclado sozinho
+  if(!window.matchMedia('(pointer:coarse)').matches)input.focus();
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9e4933b757004326a557c4ba3be104cd"}'></script><!-- End Cloudflare Web Analytics -->
