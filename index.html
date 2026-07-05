@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geladeira da Zica — a mandinga oficial da Copa</title>
+<meta name="description" content="Escreve o nome, joga no freezer virtual e deixa congelando com os pinguins. A mandinga oficial da Copa do Mundo.">
+
+<!-- ===== GOOGLE ADSENSE =====
+     1) Depois de aprovado, descomente o script abaixo e troque SEUID pelo client real.
+     2) Troque ADS_LIVE para true no <script> no fim do body, pra tirar o display:none dos blocos .ad.
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEUID" crossorigin="anonymous"></script>
+-->
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+<!-- Open Graph / redes sociais — troque o domínio quando comprar (ver docs/spec.md P1) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Geladeira da Zica">
+<meta property="og:title" content="Geladeira da Zica — a mandinga oficial da Copa">
+<meta property="og:description" content="Escreve o nome, joga no freezer virtual e deixa congelando com os pinguins.">
+<meta property="og:image" content="https://geladeiradazica.com.br/assets/og-image.jpg">
+<meta property="og:url" content="https://geladeiradazica.com.br/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Geladeira da Zica — a mandinga oficial da Copa">
+<meta name="twitter:description" content="Escreve o nome, joga no freezer virtual e deixa congelando com os pinguins.">
+<meta name="twitter:image" content="https://geladeiradazica.com.br/assets/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="assets/i18n.js"></script>
+
+<style>
+  :root{
+    --ice-deep:#08313a; --ice-mid:#0f4c58; --ice-glow:#1b6f7e; --frost:#cdeef2;
+    --enamel:#f4f2ec; --enamel-shade:#dcdad2; --steel:#b8bcc0; --steel-dark:#7d8288;
+    --cavity-top:#bfe6ef; --cavity-bot:#5aa7b8; --cavity-deep:#2d6b7a;
+    --ink:#22324f; --hot:#e23a2e; --hot-dark:#b62b21;
+    --paper-a:#fbe7a1; --paper-b:#f7cddb; --paper-c:#c9e7c2; --paper-d:#cfe3f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--frost);min-height:100vh;overflow-x:hidden;
+    background:radial-gradient(120% 90% at 50% -10%, var(--ice-glow) 0%, var(--ice-mid) 42%, var(--ice-deep) 100%);
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(circle at 12% 20%, rgba(255,255,255,.06) 0 1px, transparent 2px),
+      radial-gradient(circle at 78% 68%, rgba(255,255,255,.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 40% 85%, rgba(255,255,255,.045) 0 1px, transparent 2px);
+    background-size:340px 340px,280px 280px,300px 300px;}
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 18px 48px}
+
+  .ad{display:flex;align-items:center;justify-content:center;margin:16px auto;width:100%;max-width:728px;
+    min-height:90px;border:1px dashed rgba(205,238,242,.35);border-radius:10px;color:rgba(205,238,242,.5);
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.10)}
+  .ad--foot{max-width:970px;min-height:110px}
+
+  header{text-align:center;padding:22px 0 8px}
+  .kicker{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--frost);opacity:.75;margin-bottom:8px;border:1px solid rgba(205,238,242,.28);border-radius:100px;padding:5px 14px}
+  h1{font-family:'Anton',sans-serif;font-weight:400;line-height:.92;font-size:clamp(44px,10vw,96px);
+    letter-spacing:.01em;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.25),0 0 34px rgba(155,225,235,.25)}
+  h1 .cold{color:var(--frost)}
+  .tagline{margin-top:10px;font-size:clamp(14px,2.6vw,18px);color:var(--frost);opacity:.85;max-width:520px;margin-inline:auto}
+
+  .stage{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:26px;align-items:start;margin-top:24px}
+  @media(max-width:760px){.stage{grid-template-columns:1fr;gap:20px}}
+  .fridge-area{display:flex;justify-content:center}
+
+  /* ---- FRIDGE FRAME (open) ---- */
+  .fridge{position:relative;width:min(370px,88vw);aspect-ratio:370/540;border-radius:26px;
+    background:linear-gradient(100deg,#fff 0%,var(--enamel) 30%,var(--enamel-shade) 100%);
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),0 30px 60px -18px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.06);
+    padding:16px 16px 16px 22px;transition:transform .12s}
+  .fridge.shake{animation:shake .5s cubic-bezier(.36,.07,.19,.97)}
+  @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-5px)}40%,60%{transform:translateX(5px)}}
+  /* open door edge on the left */
+  .door-edge{position:absolute;left:-14px;top:22px;bottom:22px;width:16px;border-radius:8px 4px 4px 8px;
+    background:linear-gradient(90deg,#fff,var(--enamel-shade));box-shadow:-8px 0 18px -6px rgba(0,0,0,.4),inset -3px 0 4px rgba(0,0,0,.12)}
+  .door-edge::after{content:"";position:absolute;right:0;top:6%;bottom:6%;width:5px;border-radius:4px;
+    background:repeating-linear-gradient(#3a3f45,#3a3f45 5px,#20242a 5px,#20242a 10px)} /* rubber gasket */
+
+  /* ---- INTERIOR CAVITY ---- */
+  .interior{position:relative;height:100%;border-radius:14px;overflow:hidden;
+    background:linear-gradient(180deg,var(--cavity-top) 0%,var(--cavity-bot) 62%,var(--cavity-deep) 100%);
+    box-shadow:inset 0 0 0 4px rgba(255,255,255,.35),inset 0 10px 26px rgba(0,0,0,.28),inset 0 -12px 30px rgba(0,0,0,.30)}
+  /* frost build-up in corners + cold vignette */
+  .interior::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;
+    background:
+      radial-gradient(120% 60% at 50% -8%,rgba(255,255,255,.7),transparent 60%),
+      radial-gradient(60% 40% at 0% 0%,rgba(255,255,255,.5),transparent 70%),
+      radial-gradient(60% 40% at 100% 0%,rgba(255,255,255,.45),transparent 70%),
+      radial-gradient(80% 50% at 50% 108%,rgba(3,40,52,.5),transparent 70%)}
+  /* neve acumulada no fundo do freezer */
+  .interior::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;z-index:2;pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 120%,rgba(255,255,255,.92),rgba(255,255,255,.4) 55%,transparent 82%)}
+  #snow{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+  .flake{position:absolute;top:-8%;border-radius:50%;background:#fff;opacity:.85;
+    filter:blur(.2px);animation:fall linear infinite}
+  @keyframes fall{0%{transform:translateY(-10%) translateX(0)}100%{transform:translateY(560px) translateX(var(--dx))}}
+
+  /* shelves */
+  .shelf{position:absolute;left:2%;right:2%;height:10px;z-index:3;border-radius:4px;
+    background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.15));
+    box-shadow:0 6px 10px -4px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.9)}
+  .shelf::after{content:"";position:absolute;left:0;right:0;top:100%;height:8px;
+    background:linear-gradient(180deg,rgba(255,255,255,.35),transparent)}
+  /* montinho de neve acumulada em cima da prateleira */
+  .shelf::before{content:"";position:absolute;left:6%;width:34%;top:-5px;height:8px;border-radius:50% 50% 40% 40%/70% 70% 30% 30%;
+    background:linear-gradient(180deg,#fff,rgba(255,255,255,.75));box-shadow:0 -1px 3px rgba(255,255,255,.5)}
+  .shelf:nth-child(3)::before{left:auto;right:10%}
+
+  #board{position:absolute;inset:0;z-index:5;pointer-events:none}
+  #board > *{pointer-events:auto}
+
+  .note{position:absolute;cursor:grab;width:92px;min-height:64px;padding:12px 9px;
+    font-family:'Caveat',cursive;font-weight:700;font-size:23px;line-height:1.02;color:var(--ink);text-align:center;
+    word-break:break-word;background:var(--paper-a);box-shadow:0 9px 14px -6px rgba(0,0,0,.5);
+    display:flex;align-items:center;justify-content:center;transform-origin:bottom center;
+    clip-path:polygon(2% 0,98% 3%,100% 96%,4% 100%,0 40%)}
+  .note .frost{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(60% 50% at 20% 10%,rgba(255,255,255,.75),transparent 60%),
+               radial-gradient(50% 40% at 90% 90%,rgba(255,255,255,.6),transparent 60%);
+    mix-blend-mode:screen}
+  .note .frozen-tag{position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+    font-family:'Inter',sans-serif;font-weight:700;font-size:8px;letter-spacing:.12em;color:#0f4c58;opacity:.6}
+  .note.pop{animation:slap .45s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes slap{0%{transform:scale(1.8) rotate(var(--rot)) translateY(-40px);opacity:0}
+    55%{transform:scale(.93) rotate(var(--rot));opacity:1}100%{transform:scale(1) rotate(var(--rot))}}
+  /* congelamento progressivo: quanto mais tempo o papel fica no freezer, mais gelo acumula */
+  .note.frost-1 .frost{opacity:.6}
+  .note.frost-2{filter:saturate(.85)}
+  .note.frost-2 .frost{opacity:.85}
+  .note.frost-3{filter:saturate(.65) brightness(1.05)}
+  .note.frost-3 .frost{opacity:1}
+
+  .peng{position:absolute;z-index:5;width:46px;pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.3))}
+  .peng.shiver{animation:shiver 2.4s ease-in-out infinite}
+  @keyframes shiver{0%,100%{transform:rotate(0) translateX(0)}
+    92%{transform:rotate(0)}94%{transform:translateX(-1.2px) rotate(-2deg)}
+    96%{transform:translateX(1.2px) rotate(2deg)}98%{transform:translateX(-1px) rotate(-1deg)}}
+  .peng::after{content:"";position:absolute;inset:-4px;border-radius:50%;pointer-events:none;opacity:0;
+    background:radial-gradient(closest-side,rgba(210,245,250,.55),transparent 75%);transition:opacity 1s}
+  .peng.frost-1::after{opacity:.28}
+  .peng.frost-2::after{opacity:.5}
+  .peng.frost-3::after{opacity:.75;background:radial-gradient(closest-side,rgba(230,250,255,.85),transparent 78%)}
+  /* pinguim se assusta quando um papel cai perto dele */
+  .peng.flinch{animation:flinch .7s ease-in-out}
+  @keyframes flinch{0%{transform:rotate(0) translate(0,0)}15%{transform:rotate(-11deg) translate(-3px,-2px)}
+    30%{transform:rotate(9deg) translate(3px,0)}45%{transform:rotate(-8deg) translate(-2px,1px)}
+    60%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
+
+  .empty-hint{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;text-align:center;color:#0d4350;opacity:.7;font-size:14px;font-weight:600;line-height:1.4;padding:0 34px;pointer-events:none}
+  .hint-arrow::before{content:"→";display:block;font-size:22px;line-height:1;animation:hintBounceX 1.6s ease-in-out infinite}
+  @media(max-width:760px){.hint-arrow::before{content:"↓";animation-name:hintBounceY}}
+  @keyframes hintBounceX{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+  @keyframes hintBounceY{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+  /* ---- CONTROLS ---- */
+  .pad{background:rgba(255,255,255,.06);border:1px solid rgba(205,238,242,.16);border-radius:20px;padding:22px 20px;backdrop-filter:blur(4px)}
+  .pad h2{font-family:'Anton',sans-serif;font-weight:400;font-size:22px;letter-spacing:.02em;text-transform:uppercase;color:#fff;margin-bottom:4px}
+  .pad p.sub{font-size:13px;color:var(--frost);opacity:.75;margin-bottom:16px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:7px}
+  .field input{width:100%;padding:14px;border-radius:12px;border:none;font-family:'Caveat',cursive;font-weight:700;
+    font-size:26px;color:var(--ink);background:var(--paper-a);box-shadow:inset 0 2px 6px rgba(0,0,0,.15);
+    background-image:repeating-linear-gradient(transparent 0 33px,rgba(34,50,79,.14) 33px 34px)}
+  .field input::placeholder{color:rgba(34,50,79,.4);font-weight:600}
+  .field input:focus{outline:3px solid rgba(226,58,46,.55)}
+  .colors{display:flex;gap:8px;margin-bottom:18px;align-items:center}
+  .colors span{font-size:12px;opacity:.7;margin-right:2px}
+  .swatch{width:26px;height:26px;border-radius:6px;cursor:pointer;border:2px solid transparent;box-shadow:0 2px 5px rgba(0,0,0,.3)}
+  .swatch.sel{border-color:#fff;transform:scale(1.08)}
+  .btn{width:100%;border:none;cursor:pointer;border-radius:13px;font-family:'Inter',sans-serif;font-weight:700;
+    font-size:17px;padding:16px;transition:transform .08s,filter .15s}
+  .btn:active{transform:translateY(2px) scale(.99)}
+  .btn--zicar{background:linear-gradient(180deg,var(--hot),var(--hot-dark));color:#fff;
+    box-shadow:0 8px 20px -8px rgba(226,58,46,.8),inset 0 1px 0 rgba(255,255,255,.3)}
+  .btn--zicar:hover{filter:brightness(1.06)}
+  .counter{text-align:center;margin-top:14px;font-size:13px;opacity:.8}.counter b{color:#fff}
+  .btn--share{margin-top:16px;background:linear-gradient(180deg,#fff,var(--frost));color:var(--ice-deep);
+    box-shadow:0 10px 24px -10px rgba(205,238,242,.7),inset 0 1px 0 rgba(255,255,255,.85);font-size:16px;padding:15px}
+  .btn--share:hover{filter:brightness(1.03)}
+  .btn--share.ready{animation:sharePulse 2.2s ease-in-out infinite}
+  @keyframes sharePulse{0%,100%{box-shadow:0 10px 24px -10px rgba(205,238,242,.7),inset 0 1px 0 rgba(255,255,255,.85)}
+    50%{box-shadow:0 12px 30px -4px rgba(205,238,242,1),inset 0 1px 0 rgba(255,255,255,.95)}}
+  .link-clear{display:block;margin:14px auto 0;background:none;border:none;cursor:pointer;color:var(--frost);opacity:.55;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:6px}
+  .link-clear:hover{opacity:.85}
+  footer{text-align:center;margin-top:34px;font-size:12px;opacity:.6;line-height:1.7}
+  footer a{color:var(--frost)}
+  footer nav{margin-top:6px}
+
+  #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120px);background:#fff;color:var(--ice-deep);
+    font-weight:600;font-size:14px;padding:12px 20px;border-radius:100px;box-shadow:0 12px 30px rgba(0,0,0,.4);z-index:50;
+    transition:transform .35s cubic-bezier(.2,1.3,.4,1)}
+  #toast.show{transform:translateX(-50%) translateY(0)}
+  @media(prefers-reduced-motion:reduce){.note.pop,.fridge.shake,.flake,.peng.shiver,.peng.flinch,.hint-arrow::before,.btn--share.ready{animation:none}#toast,.peng::after{transition:none}}
+  .ad{display:none} /* some visível quando ADS_LIVE=true no script, depois do AdSense aprovado */
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="ad ad--top">Espaço para anúncio · 728×90</div>
+
+  <header>
+    <span class="kicker" id="kicker">A mandinga oficial da Copa</span>
+    <h1><span id="titleMain">Geladeira</span> <span class="cold" id="titleCold">da Zica</span></h1>
+    <p class="tagline" id="tagline">Escreve o nome, joga lá pro fundo do freezer e deixa congelando com os pinguins. O resto é com o santo. 🥶</p>
+  </header>
+
+  <div class="stage">
+    <div class="fridge-area">
+      <div class="fridge" id="fridge">
+        <div class="door-edge"></div>
+        <div class="interior">
+          <div id="snow"></div>
+          <div class="shelf" style="top:34%"></div>
+          <div class="shelf" style="top:60%"></div>
+          <div class="shelf" style="top:86%"></div>
+          <div id="board">
+            <div class="empty-hint" id="hint">
+              <span id="hintText">Tá geladinho aqui dentro.<br>Escreve um nome e clica em <strong>"Jogar no freezer"</strong>.</span>
+              <span class="hint-arrow" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pad">
+      <h2 id="panelTitle">Manda pro gelo</h2>
+      <p class="sub" id="panelSub">Um nome por papel. Pode ser jogador, técnico ou seleção inteira.</p>
+      <div class="field">
+        <label for="nome" id="nameLabel">Nome da vítima</label>
+        <input id="nome" type="text" maxlength="24" placeholder="Ex: seleção rival..." autocomplete="off">
+      </div>
+      <div class="colors" id="colors">
+        <span id="colorLabel">Cor do papel</span>
+        <div class="swatch sel" data-c="a" style="background:var(--paper-a)"></div>
+        <div class="swatch" data-c="b" style="background:var(--paper-b)"></div>
+        <div class="swatch" data-c="c" style="background:var(--paper-c)"></div>
+        <div class="swatch" data-c="d" style="background:var(--paper-d)"></div>
+      </div>
+      <button class="btn btn--zicar" id="zicar">🥶 Jogar no freezer</button>
+      <p class="counter"><span id="counterPre">Você já congelou </span><b id="count">0</b><span id="counterPost"></span></p>
+      <button class="btn btn--share" id="share">❄️ Compartilhar</button>
+      <button class="link-clear" id="clear">Limpar tudo</button>
+    </div>
+  </div>
+
+  <div class="ad ad--foot">Espaço para anúncio · responsivo</div>
+  <footer><span id="footerText">Feito na zoeira pra Copa. A zica não tem garantia científica. 😂</span><br>#GeladeiraDaZica
+    <nav><a href="sobre.html" id="navSobre">Sobre</a> · <a href="privacidade.html" id="navPrivacidade">Privacidade</a></nav>
+  </footer>
+</div>
+
+<div id="toast">Congelado! 🧊</div>
+
+<script>
+(function(){
+  const board=document.getElementById('board'),hint=document.getElementById('hint'),input=document.getElementById('nome'),
+        zicarBtn=document.getElementById('zicar'),clearBtn=document.getElementById('clear'),shareBtn=document.getElementById('share'),
+        countEl=document.getElementById('count'),fridge=document.getElementById('fridge'),toast=document.getElementById('toast'),
+        snow=document.getElementById('snow');
+  const ADS_LIVE=false; // true depois que o AdSense aprovar e o script real estiver colado no <head>
+  if(ADS_LIVE)document.querySelectorAll('.ad').forEach(el=>el.style.display='');
+
+  // ---- I18N (detecção automática pelo idioma do navegador: pt-BR, en, es, de) ----
+  const I18N={
+    pt:{htmlLang:'pt-BR',docTitle:'Geladeira da Zica — a mandinga oficial da Copa',
+      kicker:'A mandinga oficial da Copa',titleMain:'Geladeira',titleCold:'da Zica',
+      tagline:'Escreve o nome, joga lá pro fundo do freezer e deixa congelando com os pinguins. O resto é com o santo. 🥶',
+      panelTitle:'Manda pro gelo',panelSub:'Um nome por papel. Pode ser jogador, técnico ou seleção inteira.',
+      nameLabel:'Nome da vítima',namePlaceholder:'Ex: seleção rival...',colorLabel:'Cor do papel',
+      zicarBtn:'🥶 Jogar no freezer',counterPre:'Você já congelou ',counterPost:'',
+      shareBtn:'❄️ Compartilhar',clearBtn:'Limpar tudo',
+      hintHTML:'Tá geladinho aqui dentro.<br>Escreve um nome e clica em <strong>"Jogar no freezer"</strong>.',
+      footerText:'Feito na zoeira pra Copa. A zica não tem garantia científica. 😂',
+      navSobre:'Sobre',navPrivacidade:'Privacidade',noGelo:'NO GELO',
+      toastFrozen:n=>`❄️ ${n} tá congelando`,toastNeedName:'Escreve um nome primeiro 😅',
+      toastFull:'Freezer lotado! Já deu 🥶',toastCleared:'Freezer limpo 🧽',
+      toastNeedShare:'Congela alguém antes de compartilhar 😉',toastGenerating:'Gerando imagem...',
+      toastDownloaded:'Imagem baixada! 📥',toastShareFail:'Não rolou gerar a imagem 😕',
+      shareMsg:'Me ajuda a zicar esse aqui também 🥶'},
+    en:{htmlLang:'en',docTitle:"Zica's Freezer — the World Cup's official jinx",
+      kicker:"The World Cup's official jinx",titleMain:"Zica's",titleCold:'Freezer',
+      tagline:'Write the name, toss it in the freezer, and let it chill with the penguins. The rest is out of your hands. 🥶',
+      panelTitle:'Send it to the freezer',panelSub:'One name per note. Could be a player, a coach, or a whole team.',
+      nameLabel:"Victim's name",namePlaceholder:'E.g. rival team...',colorLabel:'Paper color',
+      zicarBtn:'🥶 Toss in the freezer',counterPre:"You've frozen ",counterPost:' so far',
+      shareBtn:'❄️ Share',clearBtn:'Clear all',
+      hintHTML:'It\'s freezing in here.<br>Write a name and hit <strong>"Toss in the freezer"</strong>.',
+      footerText:'Made for laughs during the World Cup. The jinx comes with no scientific guarantee. 😂',
+      navSobre:'About',navPrivacidade:'Privacy',noGelo:'ON ICE',
+      toastFrozen:n=>`❄️ ${n} is freezing`,toastNeedName:'Write a name first 😅',
+      toastFull:"Freezer's full! That's enough 🥶",toastCleared:'Freezer cleared 🧽',
+      toastNeedShare:'Freeze someone before sharing 😉',toastGenerating:'Generating image...',
+      toastDownloaded:'Image downloaded! 📥',toastShareFail:"Couldn't generate the image 😕",
+      shareMsg:'Help me jinx this one too 🥶'},
+    es:{htmlLang:'es',docTitle:'El Congelador de la Zica — la gafe oficial del Mundial',
+      kicker:'La gafe oficial del Mundial',titleMain:'El Congelador',titleCold:'de la Zica',
+      tagline:'Escribe el nombre, tíralo al fondo del congelador y déjalo helando con los pingüinos. El resto ya no depende de ti. 🥶',
+      panelTitle:'Mándalo al hielo',panelSub:'Un nombre por papel. Puede ser un jugador, un técnico o toda una selección.',
+      nameLabel:'Nombre de la víctima',namePlaceholder:'Ej: selección rival...',colorLabel:'Color del papel',
+      zicarBtn:'🥶 Tirar al congelador',counterPre:'Ya congelaste ',counterPost:'',
+      shareBtn:'❄️ Compartir',clearBtn:'Borrar todo',
+      hintHTML:'Aquí adentro está helado.<br>Escribe un nombre y toca <strong>"Tirar al congelador"</strong>.',
+      footerText:'Hecho de broma para el Mundial. La gafe no tiene garantía científica. 😂',
+      navSobre:'Acerca de',navPrivacidade:'Privacidad',noGelo:'EN HIELO',
+      toastFrozen:n=>`❄️ ${n} se está congelando`,toastNeedName:'Escribe un nombre primero 😅',
+      toastFull:'¡Congelador lleno! Ya fue 🥶',toastCleared:'Congelador limpio 🧽',
+      toastNeedShare:'Congela a alguien antes de compartir 😉',toastGenerating:'Generando imagen...',
+      toastDownloaded:'¡Imagen descargada! 📥',toastShareFail:'No se pudo generar la imagen 😕',
+      shareMsg:'Ayudame a hacerle mufa a este también 🥶'},
+    de:{htmlLang:'de',docTitle:'Der Gefrierschrank der Zica — der offizielle Fluch der WM',
+      kicker:'Der offizielle Fluch der WM',titleMain:'Der Gefrierschrank',titleCold:'der Zica',
+      tagline:'Schreib den Namen auf, wirf ihn ins Gefrierfach und lass ihn bei den Pinguinen frieren. Der Rest liegt nicht mehr in deiner Hand. 🥶',
+      panelTitle:'Ab ins Eisfach',panelSub:'Ein Name pro Zettel. Das kann ein Spieler, ein Trainer oder eine ganze Nationalmannschaft sein.',
+      nameLabel:'Name des Opfers',namePlaceholder:'Z. B. gegnerisches Team...',colorLabel:'Zettelfarbe',
+      zicarBtn:'🥶 Ab ins Gefrierfach',counterPre:'Du hast schon ',counterPost:' eingefroren',
+      shareBtn:'❄️ Teilen',clearBtn:'Alles löschen',
+      hintHTML:'Hier drin ist es eiskalt.<br>Schreib einen Namen und klick auf <strong>"Ab ins Gefrierfach"</strong>.',
+      footerText:'Aus Spaß zur WM gemacht. Der Fluch kommt ohne wissenschaftliche Garantie. 😂',
+      navSobre:'Über uns',navPrivacidade:'Datenschutz',noGelo:'AUF EIS',
+      toastFrozen:n=>`❄️ ${n} friert gerade ein`,toastNeedName:'Schreib zuerst einen Namen 😅',
+      toastFull:'Gefrierfach ist voll! Das reicht 🥶',toastCleared:'Gefrierfach geleert 🧽',
+      toastNeedShare:'Friere zuerst jemanden ein, bevor du teilst 😉',toastGenerating:'Bild wird erstellt...',
+      toastDownloaded:'Bild heruntergeladen! 📥',toastShareFail:'Bild konnte nicht erstellt werden 😕',
+      shareMsg:'Hilf mir, den hier auch zu verfluchen 🥶'},
+    fr:{htmlLang:'fr',docTitle:'Le Congélateur de la Zica — la malédiction officielle de la Coupe du Monde',
+      kicker:'La malédiction officielle de la Coupe du Monde',titleMain:'Le Congélateur',titleCold:'de la Zica',
+      tagline:'Écris le nom, jette-le au fond du congélateur et laisse-le geler avec les pingouins. Le reste ne dépend plus de toi. 🥶',
+      panelTitle:'Direction le congélo',panelSub:'Un nom par papier. Un joueur, un entraîneur ou toute une équipe.',
+      nameLabel:'Nom de la victime',namePlaceholder:'Ex. : équipe rivale...',colorLabel:'Couleur du papier',
+      zicarBtn:'🥶 Jeter au congélateur',counterPre:'Tu as déjà congelé ',counterPost:'',
+      shareBtn:'❄️ Partager',clearBtn:'Tout effacer',
+      hintHTML:'Il fait glacial ici.<br>Écris un nom et clique sur <strong>"Jeter au congélateur"</strong>.',
+      footerText:"Fait pour rire pendant la Coupe du Monde. La malédiction n'a aucune garantie scientifique. 😂",
+      navSobre:'À propos',navPrivacidade:'Confidentialité',noGelo:'SUR GLACE',
+      toastFrozen:n=>`❄️ ${n} est en train de geler`,toastNeedName:"Écris d'abord un nom 😅",
+      toastFull:'Congélateur plein ! Ça suffit 🥶',toastCleared:'Congélateur vidé 🧽',
+      toastNeedShare:'Congèle quelqu\'un avant de partager 😉',toastGenerating:"Génération de l'image...",
+      toastDownloaded:'Image téléchargée ! 📥',toastShareFail:"Impossible de générer l'image 😕",
+      shareMsg:'Aide-moi à jeter la malédiction sur celui-là aussi 🥶'}
+  };
+  const LOCALE=ZicaI18N.detectLocale();
+  const T=I18N[LOCALE];
+  document.documentElement.lang=T.htmlLang;
+  document.title=T.docTitle;
+  document.body.appendChild(ZicaI18N.buildSwitcher(LOCALE));
+  document.getElementById('kicker').textContent=T.kicker;
+  document.getElementById('titleMain').textContent=T.titleMain;
+  document.getElementById('titleCold').textContent=T.titleCold;
+  document.getElementById('tagline').textContent=T.tagline;
+  document.getElementById('panelTitle').textContent=T.panelTitle;
+  document.getElementById('panelSub').textContent=T.panelSub;
+  document.getElementById('nameLabel').textContent=T.nameLabel;
+  input.placeholder=T.namePlaceholder;
+  document.getElementById('colorLabel').textContent=T.colorLabel;
+  zicarBtn.textContent=T.zicarBtn;
+  document.getElementById('counterPre').textContent=T.counterPre;
+  document.getElementById('counterPost').textContent=T.counterPost;
+  shareBtn.textContent=T.shareBtn;
+  clearBtn.textContent=T.clearBtn;
+  document.getElementById('hintText').innerHTML=T.hintHTML;
+  document.getElementById('footerText').textContent=T.footerText;
+  document.getElementById('navSobre').textContent=T.navSobre;
+  document.getElementById('navPrivacidade').textContent=T.navPrivacidade;
+
+  const paperColors={a:'var(--paper-a)',b:'var(--paper-b)',c:'var(--paper-c)',d:'var(--paper-d)'};
+  let selColor='a', notes=[], penguins=[];
+  const pageLoadedAt=Date.now();
+  const STORAGE_KEY='zicaFreezerNotes';
+  // shelf surface positions (fraction of interior height where a shelf top sits)
+  const shelves=[0.34,0.60,0.86], shelfLoad=[0,0,0];
+
+  // ---- SNOW ----
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function buildSnow(){
+    const n = reduce?0:46;
+    for(let i=0;i<n;i++){
+      const f=document.createElement('div');f.className='flake';
+      const s=2+Math.random()*4;
+      f.style.width=f.style.height=s+'px';
+      f.style.left=Math.random()*100+'%';
+      f.style.setProperty('--dx',(Math.random()*40-20)+'px');
+      f.style.animationDuration=(4+Math.random()*6)+'s';
+      f.style.animationDelay=(-Math.random()*8)+'s';
+      f.style.opacity=(0.4+Math.random()*0.5).toFixed(2);
+      snow.appendChild(f);
+    }
+  }
+  buildSnow();
+
+  // ---- PENGUINS (decoração fixa) ----
+  function penguinSVG(){
+    return `<svg viewBox="0 0 60 76" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="30" cy="70" rx="16" ry="4" fill="rgba(0,0,0,.18)"/>
+      <path d="M30 6c13 0 20 12 20 30 0 22-9 34-20 34S10 58 10 36C10 18 17 6 30 6Z" fill="#22303a"/>
+      <path d="M30 20c8 0 12 8 12 22 0 16-5 24-12 24s-12-8-12-24C18 28 22 20 30 20Z" fill="#f4f7f8"/>
+      <circle cx="23" cy="30" r="4.4" fill="#fff"/><circle cx="37" cy="30" r="4.4" fill="#fff"/>
+      <circle cx="23.6" cy="30.6" r="2.1" fill="#1a2228"/><circle cx="36.4" cy="30.6" r="2.1" fill="#1a2228"/>
+      <path d="M30 34l6 4-6 4-6-4Z" fill="#f6a12a"/>
+      <path d="M22 68l-5 5h9Zm16 0l5 5h-9Z" fill="#f6a12a"/>
+      <path d="M10 40c-3 3-4 8-3 12 2-2 4-5 5-9Zm40 0c3 3 4 8 3 12-2-2-4-5-5-9Z" fill="#1a2730"/>
+      <g opacity=".55" fill="#eaf7fb"><circle cx="18" cy="46" r="1.4"/><circle cx="42" cy="52" r="1.2"/><circle cx="30" cy="60" r="1.3"/></g>
+    </svg>`;
+  }
+
+  // ---- CARTÃO DE COMPARTILHAMENTO (desenhado num canvas próprio, sem depender de html2canvas) ----
+  function roundRectPath(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+  function frostStageOf(el){
+    if(el.classList.contains('frost-3'))return 3;
+    if(el.classList.contains('frost-2'))return 2;
+    if(el.classList.contains('frost-1'))return 1;
+    return 0;
+  }
+  function computeLines(ctx,text,maxWidth){
+    const words=text.split(' ');
+    let lines=[],line='';
+    words.forEach(w=>{
+      const test=line?line+' '+w:w;
+      if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=w;}
+      else line=test;
+    });
+    if(line)lines.push(line);
+    return lines;
+  }
+  let pengImgPromise=null;
+  function getPenguinImage(){
+    if(!pengImgPromise){
+      const url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(penguinSVG());
+      pengImgPromise=new Promise(resolve=>{
+        const img=new Image();
+        img.onload=()=>resolve(img);
+        img.onerror=()=>resolve(null);
+        img.src=url;
+      });
+    }
+    return pengImgPromise;
+  }
+  function drawFridgeCard(ctx,fx,fy,fw,fh,pengImg,paperHex){
+    roundRectPath(ctx,fx,fy,fw,fh,40);
+    const enamel=ctx.createLinearGradient(fx,fy,fx+fw,fy+fh*0.3);
+    enamel.addColorStop(0,'#ffffff');enamel.addColorStop(.3,'#f4f2ec');enamel.addColorStop(1,'#dcdad2');
+    ctx.fillStyle=enamel;ctx.fill();
+
+    const pad=26,ix=fx+pad+10,iy=fy+pad,iw=fw-pad*2-10,ih=fh-pad*2;
+    roundRectPath(ctx,ix,iy,iw,ih,22);
+    ctx.save();ctx.clip();
+
+    const cav=ctx.createLinearGradient(0,iy,0,iy+ih);
+    cav.addColorStop(0,'#bfe6ef');cav.addColorStop(.62,'#5aa7b8');cav.addColorStop(1,'#2d6b7a');
+    ctx.fillStyle=cav;ctx.fillRect(ix,iy,iw,ih);
+
+    // flocos estáticos (decoração da foto)
+    ctx.fillStyle='#fff';
+    for(let i=0;i<80;i++){
+      ctx.globalAlpha=0.3+Math.random()*0.55;
+      ctx.beginPath();ctx.arc(ix+Math.random()*iw,iy+Math.random()*ih*0.85,1+Math.random()*2.6,0,Math.PI*2);ctx.fill();
+    }
+    ctx.globalAlpha=1;
+
+    // neve acumulada no fundo
+    const drift=ctx.createRadialGradient(ix+iw/2,iy+ih*1.05,10,ix+iw/2,iy+ih*1.05,ih*0.55);
+    drift.addColorStop(0,'rgba(255,255,255,.95)');
+    drift.addColorStop(.6,'rgba(255,255,255,.35)');
+    drift.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=drift;ctx.fillRect(ix,iy+ih*0.8,iw,ih*0.2);
+
+    // vinheta gelada no topo
+    const vin=ctx.createRadialGradient(ix+iw*0.5,iy,10,ix+iw*0.5,iy,ih*0.5);
+    vin.addColorStop(0,'rgba(255,255,255,.5)');vin.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=vin;ctx.fillRect(ix,iy,iw,ih*0.4);
+
+    // prateleiras com neve por cima
+    shelves.forEach((f,i)=>{
+      const sy=iy+f*ih;
+      ctx.fillStyle='rgba(255,255,255,.88)';
+      roundRectPath(ctx,ix+iw*0.02,sy,iw*0.96,7,4);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.95)';
+      ctx.beginPath();
+      const capX=i===1?ix+iw*0.74:ix+iw*0.24;
+      ctx.ellipse(capX,sy-3,iw*0.15,6,0,0,Math.PI*2);ctx.fill();
+    });
+
+    // pinguins
+    penguins.forEach(p=>{
+      const px=ix+p.xFrac*iw,py=iy+shelves[p.sh]*ih-46;
+      if(pengImg)ctx.drawImage(pengImg,px,py,46,58.3);
+      const st=frostStageOf(p.el);
+      if(st){
+        ctx.globalAlpha=st*0.16;ctx.fillStyle='#eafbff';
+        ctx.beginPath();ctx.ellipse(px+23,py+30,27,33,0,0,Math.PI*2);ctx.fill();
+        ctx.globalAlpha=1;
+      }
+    });
+
+    // papéis (a altura cresce conforme o nome precisa de mais linhas, igual no DOM)
+    notes.forEach(n=>{
+      const scale=iw/board.clientWidth;
+      const w=92*scale;
+      ctx.font=`700 ${21*scale}px Caveat, cursive`;
+      const lineH=20*scale, tagH=28*scale;
+      const lines=computeLines(ctx,n.name,w-14*scale);
+      const h=Math.max(68*scale,tagH+lines.length*lineH+8*scale);
+      const nx=ix+n.xFrac*iw,ny=iy+shelves[n.sh]*ih-64*scale;
+      ctx.save();
+      ctx.translate(nx+w/2,ny+h/2);
+      ctx.rotate(n.rot*Math.PI/180);
+      roundRectPath(ctx,-w/2,-h/2,w,h,6*scale);
+      ctx.fillStyle=paperHex[n.color]||paperHex.a;ctx.fill();
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(34,50,79,.55)';
+      ctx.font=`700 ${9*scale}px Inter, sans-serif`;
+      ctx.fillText(T.noGelo,0,-h/2+11*scale);
+      ctx.fillStyle='#22324f';
+      ctx.font=`700 ${21*scale}px Caveat, cursive`;
+      const startY=-h/2+tagH+lineH*0.7;
+      lines.forEach((l,i)=>ctx.fillText(l,0,startY+i*lineH));
+      const st=frostStageOf(n.el);
+      if(st){ctx.fillStyle=`rgba(255,255,255,${0.12+st*0.2})`;roundRectPath(ctx,-w/2,-h/2,w,h,6*scale);ctx.fill();}
+      ctx.restore();
+    });
+
+    ctx.restore();
+    roundRectPath(ctx,ix,iy,iw,ih,22);
+    ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.5)';ctx.stroke();
+    roundRectPath(ctx,fx,fy,fw,fh,40);
+    ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.7)';ctx.stroke();
+  }
+  async function buildShareCanvas(){
+    const cssVar=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const paperHex={a:cssVar('--paper-a'),b:cssVar('--paper-b'),c:cssVar('--paper-c'),d:cssVar('--paper-d')};
+    await document.fonts.ready;
+    const pengImg=await getPenguinImage();
+
+    const W=1080,H=1400,S=2;
+    const canvas=document.createElement('canvas');
+    canvas.width=W*S;canvas.height=H*S;
+    const ctx=canvas.getContext('2d');
+    ctx.scale(S,S);
+
+    const bg=ctx.createRadialGradient(W*0.5,-H*0.08,10,W*0.5,H*0.4,H*0.95);
+    bg.addColorStop(0,'#1b6f7e');bg.addColorStop(.42,'#0f4c58');bg.addColorStop(1,'#08313a');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+    ctx.textAlign='center';ctx.textBaseline='alphabetic';
+
+    ctx.font='700 20px Inter, sans-serif';
+    const kickerText=T.kicker.toUpperCase();
+    const kw=ctx.measureText(kickerText).width+60;
+    roundRectPath(ctx,(W-kw)/2,50,kw,40,20);
+    ctx.strokeStyle='rgba(205,238,242,.5)';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle='rgba(205,238,242,.92)';
+    ctx.fillText(kickerText,W/2,76);
+
+    ctx.font='400 66px Anton, sans-serif';
+    ctx.fillStyle='#fff';
+    ctx.fillText(T.titleMain.toUpperCase(),W/2,168);
+    ctx.fillStyle='#cdeef2';
+    ctx.fillText(T.titleCold.toUpperCase(),W/2,232);
+
+    const fx=110,fy=272,fw=W-220,fh=830;
+    drawFridgeCard(ctx,fx,fy,fw,fh,pengImg,paperHex);
+
+    ctx.font='700 32px Inter, sans-serif';
+    ctx.fillStyle='#fff';
+    ctx.fillText(T.shareMsg,W/2,fy+fh+64);
+    ctx.font='600 22px Inter, sans-serif';
+    ctx.fillStyle='rgba(205,238,242,.75)';
+    ctx.fillText('geladeiradazica.com.br',W/2,fy+fh+102);
+
+    return canvas;
+  }
+
+  function placePenguins(){
+    const boardH=board.clientHeight, boardW=board.clientWidth;
+    const spots=[{sh:0,x:0.10},{sh:1,x:0.74},{sh:2,x:0.16}];
+    spots.forEach((sp,i)=>{
+      const p=document.createElement('div');
+      p.className='peng'+(reduce?'':' shiver');
+      p.style.left=(sp.x*boardW)+'px';
+      p.style.top=(shelves[sp.sh]*boardH-46)+'px';
+      p.style.animationDelay=(i*0.7)+'s';
+      p.innerHTML=penguinSVG();
+      board.appendChild(p);
+      penguins.push({el:p,sh:sp.sh,xFrac:sp.x});
+    });
+  }
+  // pinguim se assusta quando um papel cai na mesma prateleira, perto dele
+  function reactPenguins(sh,noteX){
+    if(reduce)return;
+    const bw=board.clientWidth;
+    penguins.forEach(p=>{
+      if(p.sh!==sh)return;
+      if(Math.abs(p.xFrac*bw-noteX)<70){
+        p.el.classList.remove('flinch');void p.el.offsetWidth;
+        p.el.classList.add('flinch');
+        setTimeout(()=>p.el.classList.remove('flinch'),700);
+      }
+    });
+  }
+  // congelamento progressivo (papéis e pinguins ficam mais gelados com o tempo)
+  function stageFor(ageMs,t1,t2,t3){return ageMs>=t3?3:ageMs>=t2?2:ageMs>=t1?1:0;}
+  function updateNoteFrost(n){
+    const st=stageFor(Date.now()-n.createdAt,20000,60000,150000);
+    n.el.classList.remove('frost-1','frost-2','frost-3');
+    if(st)n.el.classList.add('frost-'+st);
+  }
+  function updatePenguinFrost(p){
+    const st=stageFor(Date.now()-pageLoadedAt,30000,90000,240000);
+    p.el.classList.remove('frost-1','frost-2','frost-3');
+    if(st)p.el.classList.add('frost-'+st);
+  }
+  setInterval(()=>{notes.forEach(updateNoteFrost);penguins.forEach(updatePenguinFrost);},10000);
+
+  // ---- PERSISTÊNCIA (localStorage, sobrevive ao F5) ----
+  function saveNotes(){
+    try{
+      const data=notes.map(n=>({name:n.name,color:n.color,sh:n.sh,xFrac:n.xFrac,rot:n.rot,createdAt:n.createdAt}));
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    }catch(e){}
+  }
+  function loadNotes(){
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw)return;
+      JSON.parse(raw).forEach(n=>addNote(n.name,n));
+    }catch(e){}
+  }
+  // aguarda layout
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{placePenguins();loadNotes();}));
+
+  document.getElementById('colors').addEventListener('click',e=>{
+    const sw=e.target.closest('.swatch');if(!sw)return;
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel'));
+    sw.classList.add('sel');selColor=sw.dataset.c;
+  });
+  function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1800);}
+  function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+  function pickSpot(){
+    const bw=board.clientWidth, noteW=92;
+    // escolhe a prateleira menos cheia
+    let sh=0,min=Infinity;
+    shelfLoad.forEach((l,i)=>{if(l<min){min=l;sh=i;}});
+    shelfLoad[sh]++;
+    const x=8+Math.random()*(bw-noteW-16);
+    return {sh,x};
+  }
+
+  function addNote(name,restore){
+    hint.style.display='none';
+    const bw=board.clientWidth, bh=board.clientHeight;
+    let sh,x,rot,color,createdAt;
+    if(restore){
+      sh=restore.sh;x=restore.xFrac*bw;rot=restore.rot;color=restore.color;createdAt=restore.createdAt;
+      shelfLoad[sh]++;
+    }else{
+      const spot=pickSpot();sh=spot.sh;x=spot.x;
+      rot=(Math.random()*12-6).toFixed(1);color=selColor;createdAt=Date.now();
+    }
+    const y=shelves[sh]*bh-64; // pousa em cima da prateleira
+    const el=document.createElement('div');
+    el.className='note'+(restore?'':' pop');
+    el.style.left=x+'px';el.style.top=y+'px';
+    el.style.setProperty('--rot',rot+'deg');el.style.transform=`rotate(${rot}deg)`;
+    el.style.background=paperColors[color];
+    el.innerHTML=`<span class="frozen-tag">${T.noGelo}</span>${escapeHtml(name)}<span class="frost"></span>`;
+    board.appendChild(el);
+    if(!restore)el.addEventListener('animationend',()=>el.classList.remove('pop'),{once:true});
+    makeDraggable(el);
+    const note={el,name,color,sh,xFrac:x/bw,rot,createdAt};
+    notes.push(note);countEl.textContent=notes.length;
+    updateNoteFrost(note);
+    shareBtn.classList.add('ready');
+    if(!restore){
+      fridge.classList.add('shake');setTimeout(()=>fridge.classList.remove('shake'),500);
+      toastMsg(T.toastFrozen(name));
+      reactPenguins(sh,x);
+      saveNotes();
+    }
+  }
+
+  function makeDraggable(el){
+    let sx,sy,ox,oy,drag=false;
+    const down=e=>{drag=true;el.style.cursor='grabbing';el.style.zIndex=99;const p=pt(e);sx=p.x;sy=p.y;ox=parseFloat(el.style.left);oy=parseFloat(el.style.top);e.preventDefault();};
+    const move=e=>{if(!drag)return;const p=pt(e);el.style.left=(ox+(p.x-sx))+'px';el.style.top=(oy+(p.y-sy))+'px';};
+    const up=()=>{
+      if(!drag)return;drag=false;el.style.cursor='grab';el.style.zIndex='';
+      const note=notes.find(n=>n.el===el);
+      if(note){note.xFrac=parseFloat(el.style.left)/board.clientWidth;saveNotes();}
+    };
+    el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:false});
+    window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:false});
+    window.addEventListener('mouseup',up);window.addEventListener('touchend',up);
+    function pt(e){const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY};}
+  }
+
+  function submit(){
+    const name=input.value.trim();
+    if(!name){input.focus();toastMsg(T.toastNeedName);return;}
+    if(notes.length>=36){toastMsg(T.toastFull);return;}
+    addNote(name);input.value='';input.focus();
+  }
+  zicarBtn.addEventListener('click',submit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')submit();});
+  clearBtn.addEventListener('click',()=>{
+    if(!notes.length)return;
+    notes.forEach(n=>n.el.remove());notes=[];shelfLoad[0]=shelfLoad[1]=shelfLoad[2]=0;
+    countEl.textContent=0;hint.style.display='';shareBtn.classList.remove('ready');
+    localStorage.removeItem(STORAGE_KEY);
+    toastMsg(T.toastCleared);
+  });
+
+  shareBtn.addEventListener('click',async()=>{
+    if(!notes.length){toastMsg(T.toastNeedShare);return;}
+    toastMsg(T.toastGenerating);
+    try{
+      const canvas=await buildShareCanvas();
+      canvas.toBlob(async blob=>{
+        if(!blob){toastMsg(T.toastShareFail);return;}
+        const file=new File([blob],'geladeira-da-zica.png',{type:'image/png'});
+        // no celular, chama o share sheet nativo (zap, Instagram, TikTok etc. aparecem ali)
+        const canTryShare=!!navigator.share&&(!navigator.canShare||navigator.canShare({files:[file]}));
+        if(canTryShare){
+          try{
+            await navigator.share({files:[file],title:'Geladeira da Zica',text:T.shareMsg});
+            return;
+          }catch(err){
+            if(err&&err.name==='AbortError')return; // usuário cancelou o compartilhamento, não força download
+          }
+        }
+        const url=URL.createObjectURL(blob),a=document.createElement('a');
+        a.href=url;a.download='geladeira-da-zica.png';a.click();URL.revokeObjectURL(url);
+        toastMsg(T.toastDownloaded);
+      },'image/png');
+    }catch(err){toastMsg(T.toastShareFail);console.error(err);}
+  });
+
+  input.focus();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre — Geladeira da Zica</title>
+<meta name="description" content="A história por trás da mandinga de colocar o nome do jogador na geladeira, e o que é o site Geladeira da Zica.">
+
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Geladeira da Zica">
+<meta property="og:title" content="Sobre — Geladeira da Zica">
+<meta property="og:description" content="A história por trás da mandinga de colocar o nome do jogador na geladeira.">
+<meta property="og:image" content="https://geladeiradazica.com.br/assets/og-image.jpg">
+<meta property="og:url" content="https://geladeiradazica.com.br/sobre.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sobre — Geladeira da Zica">
+<meta name="twitter:description" content="A história por trás da mandinga de colocar o nome do jogador na geladeira.">
+<meta name="twitter:image" content="https://geladeiradazica.com.br/assets/og-image.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="assets/i18n.js"></script>
+
+<style>
+  :root{
+    --ice-deep:#08313a; --ice-mid:#0f4c58; --ice-glow:#1b6f7e; --frost:#cdeef2;
+    --ink:#22324f; --hot:#e23a2e; --hot-dark:#b62b21;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--frost);min-height:100vh;overflow-x:hidden;
+    background:radial-gradient(120% 90% at 50% -10%, var(--ice-glow) 0%, var(--ice-mid) 42%, var(--ice-deep) 100%);
+  }
+  .wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:0 18px 48px}
+
+  header{text-align:center;padding:28px 0 8px}
+  .kicker{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--frost);opacity:.75;margin-bottom:8px;border:1px solid rgba(205,238,242,.28);border-radius:100px;padding:5px 14px}
+  h1{font-family:'Anton',sans-serif;font-weight:400;line-height:.95;font-size:clamp(34px,7vw,56px);
+    letter-spacing:.01em;text-transform:uppercase;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.25),0 0 34px rgba(155,225,235,.25)}
+  h1 .cold{color:var(--frost)}
+
+  nav.top{display:flex;justify-content:center;gap:18px;margin-top:16px;font-size:13px;font-weight:600}
+  nav.top a{color:var(--frost);opacity:.8;text-decoration:none;border-bottom:1px solid transparent}
+  nav.top a:hover{opacity:1;border-color:var(--frost)}
+  nav.top a.active{opacity:1;border-color:var(--frost)}
+
+  main.card{margin-top:28px;background:rgba(255,255,255,.06);border:1px solid rgba(205,238,242,.16);
+    border-radius:20px;padding:32px 28px;backdrop-filter:blur(4px)}
+  main.card h2{font-family:'Anton',sans-serif;font-weight:400;font-size:20px;letter-spacing:.02em;
+    text-transform:uppercase;color:#fff;margin:26px 0 10px}
+  main.card h2:first-child{margin-top:0}
+  main.card p{font-size:15.5px;line-height:1.75;margin-bottom:14px;color:var(--frost)}
+  main.card p:last-child{margin-bottom:0}
+  main.card strong{color:#fff}
+
+  .back{display:inline-block;margin-top:26px;color:var(--frost);opacity:.85;font-size:14px;font-weight:600;text-decoration:none;
+    border:1px solid rgba(205,238,242,.28);border-radius:100px;padding:10px 20px}
+  .back:hover{opacity:1;background:rgba(255,255,255,.08)}
+
+  footer{text-align:center;margin-top:34px;font-size:12px;opacity:.6;line-height:1.7}
+  footer a{color:var(--frost)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="kicker" id="kicker">A mandinga oficial da Copa</span>
+    <h1><span id="titleMain">Sobre a</span> <span class="cold" id="titleCold">Geladeira</span></h1>
+    <nav class="top">
+      <a href="index.html" id="navInicio">Início</a>
+      <a href="sobre.html" class="active" id="navSobre">Sobre</a>
+      <a href="privacidade.html" id="navPrivacidade">Privacidade</a>
+    </nav>
+  </header>
+
+  <main class="card">
+    <h2 id="h2_1">A mandinga</h2>
+    <p id="p1">Colocar o nome do jogador na geladeira é a superstição mais brasileira que existe. Todo mundo já ouviu falar. Muita gente já fez, mesmo rindo da própria cara enquanto fazia.</p>
+    <p id="p2">A ideia é simples. Escreve o nome do adversário, do jogador que tá te tirando do sério, ou até da seleção inteira, num papel. Joga dentro do congelador. Se o time jogar mal no domingo, foi por causa disso. Não tem lógica nenhuma nisso. Também não precisa ter.</p>
+    <p id="p3">A mandinga é antiga. Vem da torcida de botequim, da cozinha da casa onde a família se junta pra ver o jogo, do freezer que vira arquivo de rivalidades. Antes da internet já rolava. A internet só deu um microfone maior pra ela.</p>
+
+    <h2 id="h2_2">Por que isso vira Copa</h2>
+    <p id="p4">Fora de Copa, é papo de família. Dentro de Copa, vira print, vira story, vira grupo de zap lotado de gente discutindo se o nome do centroavante do rival já tá dentro do freezer ou se falta alguém escrever.</p>
+    <p id="p5">Tem gente que jura que funciona. Tem gente que faz achando graça, mas separa um espaço na porta da geladeira do mesmo jeito, por garantia. Os dois tipos são bem-vindos aqui.</p>
+
+    <h2 id="h2_3">O que é este site</h2>
+    <p id="p6">Pegamos essa mandinga e botamos na tela. Você escreve o nome, joga no freezer virtual, tira o print e manda pro grupo. É a desculpa perfeita pra zoar o amigo torcedor do time rival sem precisar abrir a geladeira de verdade.</p>
+    <p id="p7">O site não muda resultado de jogo. Não tem cientista por trás, não tem promessa de nada. É humor. Se o jogador jogar mal depois, foi coincidência. Se jogar bem, também foi coincidência. A graça está no meio do caminho, não no resultado.</p>
+  </main>
+
+  <a class="back" href="index.html" id="backLink">Voltar pro freezer</a>
+
+  <footer><span id="footerText">Feito na zoeira pra Copa. Sem vínculo com clubes, seleções, jogadores ou confederações.</span><br>
+    <a href="index.html" id="navInicio2">Início</a> · <a href="sobre.html" id="navSobre2">Sobre</a> · <a href="privacidade.html" id="navPrivacidade2">Privacidade</a>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const I18N={
+    pt:{htmlLang:'pt-BR',docTitle:'Sobre — Geladeira da Zica',
+      kicker:'A mandinga oficial da Copa',titleMain:'Sobre a',titleCold:'Geladeira',
+      navInicio:'Início',navSobre:'Sobre',navPrivacidade:'Privacidade',
+      h2_1:'A mandinga',
+      p1:'Colocar o nome do jogador na geladeira é a superstição mais brasileira que existe. Todo mundo já ouviu falar. Muita gente já fez, mesmo rindo da própria cara enquanto fazia.',
+      p2:'A ideia é simples. Escreve o nome do adversário, do jogador que tá te tirando do sério, ou até da seleção inteira, num papel. Joga dentro do congelador. Se o time jogar mal no domingo, foi por causa disso. Não tem lógica nenhuma nisso. Também não precisa ter.',
+      p3:'A mandinga é antiga. Vem da torcida de botequim, da cozinha da casa onde a família se junta pra ver o jogo, do freezer que vira arquivo de rivalidades. Antes da internet já rolava. A internet só deu um microfone maior pra ela.',
+      h2_2:'Por que isso vira Copa',
+      p4:'Fora de Copa, é papo de família. Dentro de Copa, vira print, vira story, vira grupo de zap lotado de gente discutindo se o nome do centroavante do rival já tá dentro do freezer ou se falta alguém escrever.',
+      p5:'Tem gente que jura que funciona. Tem gente que faz achando graça, mas separa um espaço na porta da geladeira do mesmo jeito, por garantia. Os dois tipos são bem-vindos aqui.',
+      h2_3:'O que é este site',
+      p6:'Pegamos essa mandinga e botamos na tela. Você escreve o nome, joga no freezer virtual, tira o print e manda pro grupo. É a desculpa perfeita pra zoar o amigo torcedor do time rival sem precisar abrir a geladeira de verdade.',
+      p7:'O site não muda resultado de jogo. Não tem cientista por trás, não tem promessa de nada. É humor. Se o jogador jogar mal depois, foi coincidência. Se jogar bem, também foi coincidência. A graça está no meio do caminho, não no resultado.',
+      backLink:'Voltar pro freezer',
+      footerText:'Feito na zoeira pra Copa. Sem vínculo com clubes, seleções, jogadores ou confederações.'},
+    en:{htmlLang:'en',docTitle:"About — Zica's Freezer",
+      kicker:"The World Cup's official jinx",titleMain:'About',titleCold:"Zica's Freezer",
+      navInicio:'Home',navSobre:'About',navPrivacidade:'Privacy',
+      h2_1:'The curse',
+      p1:"Putting a player's name in the freezer is the most Brazilian superstition there is. Everyone has heard of it. Plenty of people have done it, laughing at themselves the whole time.",
+      p2:"The idea is simple. Write the name of the rival, the player getting on your nerves, or even an entire team, on a piece of paper. Toss it in the freezer. If the team plays badly on Sunday, that's why. None of this makes any sense. It doesn't need to.",
+      p3:'The curse is old. It comes from bar-table fans, from the kitchen where the family gathers to watch the game, from the freezer that turns into an archive of rivalries. It was already a thing before the internet. The internet just gave it a bigger microphone.',
+      h2_2:'Why it explodes during the World Cup',
+      p4:"Outside the World Cup, it's family chat. During the World Cup, it becomes a screenshot, a story, a group chat full of people arguing over whether the rival striker's name is already in the freezer or if someone still needs to write it.",
+      p5:'Some people swear it works. Some do it for laughs, but still leave a spot on the fridge door just in case. Both types are welcome here.',
+      h2_3:'What this site is',
+      p6:"We took that curse and put it on a screen. You write the name, toss it in the virtual freezer, grab the screenshot, and send it to the group chat. It's the perfect excuse to mess with your friend who roots for the rival team, without opening a real freezer.",
+      p7:"The site doesn't change match results. There's no scientist behind it, no promises of anything. It's a joke. If the player plays badly afterward, that's a coincidence. If they play well, that's a coincidence too. The fun is in doing it, not in the outcome.",
+      backLink:'Back to the freezer',
+      footerText:'Made for laughs during the World Cup. Not affiliated with any club, national team, player, or confederation.'},
+    es:{htmlLang:'es',docTitle:'Acerca de — El Congelador de la Zica',
+      kicker:'La gafe oficial del Mundial',titleMain:'Sobre',titleCold:'el Congelador de la Zica',
+      navInicio:'Inicio',navSobre:'Acerca de',navPrivacidade:'Privacidad',
+      h2_1:'La mufa',
+      p1:'Poner el nombre del jugador en el congelador es la superstición más brasileña que existe. Todo el mundo la conoce. Mucha gente ya lo hizo, riéndose de sí misma mientras lo hacía.',
+      p2:'La idea es simple. Escribís el nombre del rival, del jugador que te saca de quicio, o hasta de toda una selección, en un papel. Lo tirás dentro del congelador. Si el equipo juega mal el domingo, fue por eso. No tiene ninguna lógica. Tampoco la necesita.',
+      p3:'La mufa es antigua. Viene de la hinchada de bar, de la cocina donde la familia se junta a ver el partido, del congelador que se vuelve un archivo de rivalidades. Ya existía antes de internet. Internet solo le dio un micrófono más grande.',
+      h2_2:'Por qué explota en el Mundial',
+      p4:'Fuera del Mundial, es charla de familia. Durante el Mundial, se convierte en captura de pantalla, en historia, en grupo de WhatsApp lleno de gente discutiendo si el nombre del delantero rival ya está en el congelador o si falta que alguien lo escriba.',
+      p5:'Hay quien jura que funciona. Hay quien lo hace de broma, pero igual reserva un espacio en la puerta de la heladera, por las dudas. Los dos tipos son bienvenidos acá.',
+      h2_3:'Qué es este sitio',
+      p6:'Agarramos esa mufa y la pusimos en la pantalla. Escribís el nombre, lo tirás al congelador virtual, sacás la captura y la mandás al grupo. Es la excusa perfecta para joder al amigo hincha del equipo rival sin abrir un congelador de verdad.',
+      p7:'El sitio no cambia el resultado de ningún partido. No hay científico detrás, no hay promesa de nada. Es humor. Si el jugador juega mal después, fue casualidad. Si juega bien, también fue casualidad. La gracia está en el camino, no en el resultado.',
+      backLink:'Volver al congelador',
+      footerText:'Hecho de broma para el Mundial. Sin vínculo con clubes, selecciones, jugadores o confederaciones.'},
+    de:{htmlLang:'de',docTitle:'Über uns — Der Gefrierschrank der Zica',
+      kicker:'Der offizielle Fluch der WM',titleMain:'Über',titleCold:'den Gefrierschrank der Zica',
+      navInicio:'Start',navSobre:'Über uns',navPrivacidade:'Datenschutz',
+      h2_1:'Der Fluch',
+      p1:'Den Namen eines Spielers ins Gefrierfach zu legen ist der brasilianischste Aberglaube überhaupt. Jeder hat davon gehört. Viele haben es schon gemacht, und dabei über sich selbst gelacht.',
+      p2:'Die Idee ist einfach. Schreib den Namen des Gegners, des Spielers, der dich nervt, oder einer ganzen Nationalmannschaft auf einen Zettel. Wirf ihn ins Gefrierfach. Spielt das Team am Sonntag schlecht, war das der Grund. Das ergibt keinerlei Sinn. Muss es auch nicht.',
+      p3:'Der Fluch ist alt. Er kommt von Stammtisch-Fans, aus der Küche, in der sich die Familie zum Spiel versammelt, aus dem Gefrierfach, das zum Archiv der Rivalitäten wird. Es gab ihn schon vor dem Internet. Das Internet hat ihm nur ein größeres Mikrofon gegeben.',
+      h2_2:'Warum das zur WM explodiert',
+      p4:'Außerhalb der WM ist es Familiengespräch. Während der WM wird daraus ein Screenshot, eine Story, eine WhatsApp-Gruppe voller Leute, die diskutieren, ob der Name des gegnerischen Stürmers schon im Gefrierfach liegt oder ob ihn noch jemand aufschreiben muss.',
+      p5:'Manche schwören, dass es funktioniert. Manche machen es zum Spaß, lassen aber trotzdem sicherheitshalber einen Platz an der Kühlschranktür frei. Beide Typen sind hier willkommen.',
+      h2_3:'Was diese Seite ist',
+      p6:'Wir haben diesen Fluch genommen und auf den Bildschirm gebracht. Du schreibst den Namen, wirfst ihn ins virtuelle Gefrierfach, machst den Screenshot und schickst ihn in die Gruppe. Die perfekte Ausrede, um den Freund zu necken, der für das gegnerische Team ist, ohne einen echten Gefrierschrank zu öffnen.',
+      p7:'Die Seite ändert kein Spielergebnis. Da steckt kein Wissenschaftler dahinter, kein Versprechen von irgendetwas. Es ist Humor. Spielt der Spieler danach schlecht, war das Zufall. Spielt er gut, war das auch Zufall. Der Spaß liegt auf dem Weg, nicht im Ergebnis.',
+      backLink:'Zurück zum Gefrierfach',
+      footerText:'Aus Spaß zur WM gemacht. Keine Verbindung zu Vereinen, Nationalmannschaften, Spielern oder Verbänden.'},
+    fr:{htmlLang:'fr',docTitle:'À propos — Le Congélateur de la Zica',
+      kicker:'La malédiction officielle de la Coupe du Monde',titleMain:'À propos',titleCold:'du Congélateur de la Zica',
+      navInicio:'Accueil',navSobre:'À propos',navPrivacidade:'Confidentialité',
+      h2_1:'La malédiction',
+      p1:"Mettre le nom d'un joueur au congélateur est la superstition la plus brésilienne qui soit. Tout le monde en a entendu parler. Beaucoup de gens l'ont déjà fait, en riant d'eux-mêmes pendant qu'ils le faisaient.",
+      p2:"L'idée est simple. Écris le nom de l'adversaire, du joueur qui t'énerve, ou même de toute une équipe, sur un papier. Jette-le au congélateur. Si l'équipe joue mal dimanche, c'est à cause de ça. Ça n'a aucune logique. Ça n'en a pas besoin non plus.",
+      p3:"La malédiction est ancienne. Elle vient des supporters de bar, de la cuisine où la famille se réunit pour regarder le match, du congélateur qui devient une archive de rivalités. Ça existait déjà avant internet. Internet lui a juste donné un plus grand micro.",
+      h2_2:'Pourquoi ça explose pendant la Coupe du Monde',
+      p4:"En dehors de la Coupe du Monde, c'est une discussion de famille. Pendant la Coupe du Monde, ça devient une capture d'écran, une story, un groupe WhatsApp rempli de gens qui débattent pour savoir si le nom de l'attaquant adverse est déjà au congélateur ou s'il manque encore quelqu'un pour l'écrire.",
+      p5:'Certains jurent que ça marche. D\'autres le font pour rire, mais réservent quand même une place sur la porte du frigo, au cas où. Les deux types sont les bienvenus ici.',
+      h2_3:'Ce qu\'est ce site',
+      p6:"On a pris cette malédiction et on l'a mise à l'écran. Tu écris le nom, tu le jettes dans le congélateur virtuel, tu prends la capture d'écran et tu l'envoies au groupe. C'est l'excuse parfaite pour charrier ton pote supporter de l'équipe rivale sans avoir à ouvrir un vrai congélateur.",
+      p7:"Le site ne change le résultat d'aucun match. Il n'y a aucun scientifique derrière, aucune promesse de rien. C'est de l'humour. Si le joueur joue mal après, c'est une coïncidence. S'il joue bien, c'est aussi une coïncidence. Le plaisir est dans le chemin, pas dans le résultat.",
+      backLink:'Retour au congélateur',
+      footerText:"Fait pour rire pendant la Coupe du Monde. Aucun lien avec des clubs, sélections, joueurs ou confédérations."}
+  };
+  const LOCALE=ZicaI18N.detectLocale();
+  const T=I18N[LOCALE];
+  document.documentElement.lang=T.htmlLang;
+  document.title=T.docTitle;
+  document.body.appendChild(ZicaI18N.buildSwitcher(LOCALE));
+  ['kicker','titleMain','titleCold','navInicio','navSobre','navPrivacidade',
+   'h2_1','p1','p2','p3','h2_2','p4','p5','h2_3','p6','p7','backLink','footerText'
+  ].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=T[id];});
+  document.getElementById('navInicio2').textContent=T.navInicio;
+  document.getElementById('navSobre2').textContent=T.navSobre;
+  document.getElementById('navPrivacidade2').textContent=T.navPrivacidade;
+})();
+</script>
+</body>
+</html>
