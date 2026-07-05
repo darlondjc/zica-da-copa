@@ -34,6 +34,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="assets/i18n.js"></script>
+<script src="assets/qrcode.js"></script>
 
 <style>
   :root{
@@ -346,6 +347,9 @@
       toastFull:'Freezer lotado! Já deu 🥶',toastCleared:'Freezer limpo 🧽',
       toastNeedShare:'Congela alguém antes de compartilhar 😉',toastGenerating:'Gerando imagem...',
       toastDownloaded:'Imagem baixada! 📥',toastShareFail:'Não rolou gerar a imagem 😕',
+      toastLinkCopied:'Link copiado! Cola no sticker do story 📋',
+      toastDownloadedCopied:'Imagem baixada e link copiado! 📋',
+      qrCaption:'Aponta a câmera pra abrir',
       shareMsg:'Me ajuda a zicar os adversários você também 🥶',
       editBtn:'💾 Salvar edição',toastEdited:'✏️ Nome atualizado'},
     en:{htmlLang:'en',docTitle:"Zica's Freezer — the World Cup's official jinx",
@@ -363,6 +367,9 @@
       toastFull:"Freezer's full! That's enough 🥶",toastCleared:'Freezer cleared 🧽',
       toastNeedShare:'Freeze someone before sharing 😉',toastGenerating:'Generating image...',
       toastDownloaded:'Image downloaded! 📥',toastShareFail:"Couldn't generate the image 😕",
+      toastLinkCopied:'Link copied! Paste it in your story sticker 📋',
+      toastDownloadedCopied:'Image downloaded and link copied! 📋',
+      qrCaption:'Point your camera to open',
       shareMsg:'Help me jinx this one too 🥶',
       editBtn:'💾 Save edit',toastEdited:'✏️ Name updated'},
     es:{htmlLang:'es',docTitle:'El Congelador de la Zica — la gafe oficial del Mundial',
@@ -380,6 +387,9 @@
       toastFull:'¡Congelador lleno! Ya fue 🥶',toastCleared:'Congelador limpio 🧽',
       toastNeedShare:'Congela a alguien antes de compartir 😉',toastGenerating:'Generando imagen...',
       toastDownloaded:'¡Imagen descargada! 📥',toastShareFail:'No se pudo generar la imagen 😕',
+      toastLinkCopied:'¡Link copiado! Pégalo en el sticker de tu story 📋',
+      toastDownloadedCopied:'¡Imagen descargada y link copiado! 📋',
+      qrCaption:'Apunta la cámara para abrir',
       shareMsg:'Ayudame a hacerle mufa a este también 🥶',
       editBtn:'💾 Guardar edición',toastEdited:'✏️ Nombre actualizado'},
     de:{htmlLang:'de',docTitle:'Der Gefrierschrank der Zica — der offizielle Fluch der WM',
@@ -397,6 +407,9 @@
       toastFull:'Gefrierfach ist voll! Das reicht 🥶',toastCleared:'Gefrierfach geleert 🧽',
       toastNeedShare:'Friere zuerst jemanden ein, bevor du teilst 😉',toastGenerating:'Bild wird erstellt...',
       toastDownloaded:'Bild heruntergeladen! 📥',toastShareFail:'Bild konnte nicht erstellt werden 😕',
+      toastLinkCopied:'Link kopiert! Füg ihn im Story-Sticker ein 📋',
+      toastDownloadedCopied:'Bild heruntergeladen und Link kopiert! 📋',
+      qrCaption:'Kamera drauf halten zum Öffnen',
       shareMsg:'Hilf mir, den hier auch zu verfluchen 🥶',
       editBtn:'💾 Bearbeitung speichern',toastEdited:'✏️ Name aktualisiert'},
     fr:{htmlLang:'fr',docTitle:'Le Congélateur de la Zica — la malédiction officielle de la Coupe du Monde',
@@ -414,6 +427,9 @@
       toastFull:'Congélateur plein ! Ça suffit 🥶',toastCleared:'Congélateur vidé 🧽',
       toastNeedShare:'Congèle quelqu\'un avant de partager 😉',toastGenerating:"Génération de l'image...",
       toastDownloaded:'Image téléchargée ! 📥',toastShareFail:"Impossible de générer l'image 😕",
+      toastLinkCopied:'Lien copié ! Colle-le dans le sticker de ta story 📋',
+      toastDownloadedCopied:'Image téléchargée et lien copié ! 📋',
+      qrCaption:"Vise avec l'appareil photo pour ouvrir",
       shareMsg:'Aide-moi à jeter la malédiction sur celui-là aussi 🥶',
       editBtn:'💾 Enregistrer la modification',toastEdited:'✏️ Nom mis à jour'}
   };
@@ -446,6 +462,7 @@
   let selColor='a', notes=[], penguins=[], editingNote=null;
   const pageLoadedAt=Date.now();
   const STORAGE_KEY='zicaFreezerNotes';
+  const SITE_URL='https://zica-da-copa.darlon.workers.dev/';
   // shelf surface positions (fraction of interior height where a shelf top sits)
   const shelves=[0.26,0.48,0.68,0.88], shelfLoad=[0,0,0,0];
 
@@ -529,6 +546,7 @@
     ctx.fillStyle=enamel;ctx.fill();
 
     const pad=26,ix=fx+pad+10,iy=fy+pad,iw=fw-pad*2-10,ih=fh-pad*2;
+    const scale=iw/(board.clientWidth||iw);
     roundRectPath(ctx,ix,iy,iw,ih,22);
     ctx.save();ctx.clip();
 
@@ -556,6 +574,43 @@
     vin.addColorStop(0,'rgba(255,255,255,.5)');vin.addColorStop(1,'rgba(255,255,255,0)');
     ctx.fillStyle=vin;ctx.fillRect(ix,iy,iw,ih*0.4);
 
+    // cubo de gelo solto (mesmo desenho translúcido e faceado do freezer real)
+    function drawIceCube(x,y,w,h,rot,puddle){
+      ctx.save();
+      ctx.translate(x+w/2,y+h/2);
+      ctx.rotate(rot*Math.PI/180);
+      if(puddle){
+        const pw=w*1.6;
+        const pg=ctx.createRadialGradient(0,h*0.42,2,0,h*0.42,pw*0.5);
+        pg.addColorStop(0,'rgba(210,240,248,.55)');pg.addColorStop(1,'rgba(210,240,248,0)');
+        ctx.fillStyle=pg;
+        ctx.beginPath();ctx.ellipse(0,h*0.42,pw/2,h*0.26,0,0,Math.PI*2);ctx.fill();
+      }
+      const cw=w*0.18,ch=h*0.18;
+      ctx.beginPath();
+      ctx.moveTo(-w/2+cw,-h/2);ctx.lineTo(w/2-cw,-h/2);ctx.lineTo(w/2,-h/2+ch);
+      ctx.lineTo(w/2,h/2-ch);ctx.lineTo(w/2-cw,h/2);ctx.lineTo(-w/2+cw,h/2);
+      ctx.lineTo(-w/2,h/2-ch);ctx.lineTo(-w/2,-h/2+ch);ctx.closePath();
+      const g=ctx.createLinearGradient(-w/2,-h/2,w/2,h/2);
+      g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.32,'rgba(255,255,255,.3)');
+      g.addColorStop(.58,'rgba(180,225,238,.45)');g.addColorStop(1,'rgba(120,190,212,.6)');
+      ctx.fillStyle=g;ctx.fill();
+      ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.55)';ctx.stroke();
+      ctx.restore();
+    }
+    // pilhas de gelo fixas do freezer (mesma posição/rotação do DOM real)
+    function drawIcePile(anchorX,anchorY,cubes){
+      cubes.forEach(c=>{
+        const w=c.s*scale,h=c.s*scale;
+        const x=anchorX+c.l*scale, y=anchorY-c.b*scale-h;
+        drawIceCube(x,y,w,h,c.r,c.p!==false);
+      });
+    }
+    const floorPileX=ix+iw-0.10*iw-27*scale, floorPileY=iy+ih-0.015*ih;
+    drawIcePile(floorPileX,floorPileY,[
+      {l:0,b:0,s:20,r:12,p:true},{l:12,b:11,s:15,r:-11,p:false}
+    ]);
+
     // prateleiras com neve por cima
     shelves.forEach((f,i)=>{
       const sy=iy+f*ih;
@@ -567,24 +622,30 @@
       ctx.ellipse(capX,sy-3,iw*0.15,6,0,0,Math.PI*2);ctx.fill();
     });
 
+    // pilha maior pousada em cima da 3ª prateleira, por cima da neve
+    const shelfPileX=ix+0.14*iw, shelfPileY=iy+ih-0.32*ih;
+    drawIcePile(shelfPileX,shelfPileY,[
+      {l:0,b:0,s:26,r:-8,p:true},{l:20,b:2,s:23,r:10,p:true},{l:9,b:19,s:19,r:-4,p:false}
+    ]);
+
     // pinguins
     penguins.forEach(p=>{
-      const px=ix+p.xFrac*iw,py=iy+shelves[p.sh]*ih-46;
-      if(pengImg)ctx.drawImage(pengImg,px,py,46,58.3);
+      const pw=46*scale,ph=58.3*scale;
+      const px=ix+p.xFrac*iw,py=iy+shelves[p.sh]*ih-ph;
+      if(pengImg)ctx.drawImage(pengImg,px,py,pw,ph);
       const st=frostStageOf(p.el);
       if(st){
         ctx.globalAlpha=st*0.16;ctx.fillStyle='#eafbff';
-        ctx.beginPath();ctx.ellipse(px+23,py+30,27,33,0,0,Math.PI*2);ctx.fill();
+        ctx.beginPath();ctx.ellipse(px+pw/2,py+ph*0.51,pw*0.59,ph*0.57,0,0,Math.PI*2);ctx.fill();
         ctx.globalAlpha=1;
       }
     });
 
     // papéis (a altura cresce conforme o nome precisa de mais linhas, igual no DOM)
     notes.forEach(n=>{
-      const scale=iw/board.clientWidth;
       const w=92*scale;
       ctx.font=`700 ${21*scale}px Caveat, cursive`;
-      const lineH=20*scale, tagH=28*scale;
+      const lineH=20*scale, tagH=10*scale;
       const lines=computeLines(ctx,n.name,w-14*scale);
       const h=Math.max(68*scale,tagH+lines.length*lineH+8*scale);
       const nx=ix+n.xFrac*iw,ny=iy+shelves[n.sh]*ih-64*scale;
@@ -594,9 +655,6 @@
       roundRectPath(ctx,-w/2,-h/2,w,h,6*scale);
       ctx.fillStyle=paperHex[n.color]||paperHex.a;ctx.fill();
       ctx.textAlign='center';
-      ctx.fillStyle='rgba(34,50,79,.55)';
-      ctx.font=`700 ${9*scale}px Inter, sans-serif`;
-      ctx.fillText(T.noGelo,0,-h/2+11*scale);
       ctx.fillStyle='#22324f';
       ctx.font=`700 ${21*scale}px Caveat, cursive`;
       const startY=-h/2+tagH+lineH*0.7;
@@ -611,6 +669,18 @@
     ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.5)';ctx.stroke();
     roundRectPath(ctx,fx,fy,fw,fh,40);
     ctx.lineWidth=3;ctx.strokeStyle='rgba(255,255,255,.7)';ctx.stroke();
+
+    // painel digital de temperatura, no alto da geladeira (mesmo do DOM real)
+    ctx.font='700 24px Inter, sans-serif';
+    const tempLabel='❄ -18°C';
+    const tw=ctx.measureText(tempLabel).width,tbw=tw+46,tbh=40;
+    const tbx=fx+fw/2-tbw/2,tby=fy+10;
+    roundRectPath(ctx,tbx,tby,tbw,tbh,10);
+    ctx.fillStyle='#0d2126';ctx.fill();
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.15)';ctx.stroke();
+    ctx.fillStyle='#7fe8ff';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(tempLabel,tbx+tbw/2,tby+tbh/2+1);
+    ctx.textBaseline='alphabetic';
   }
   async function buildShareCanvas(){
     const cssVar=name=>getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -618,7 +688,7 @@
     await document.fonts.ready;
     const pengImg=await getPenguinImage();
 
-    const W=1080,H=1400,S=2;
+    const W=1080,H=1860,S=2;
     const canvas=document.createElement('canvas');
     canvas.width=W*S;canvas.height=H*S;
     const ctx=canvas.getContext('2d');
@@ -643,7 +713,7 @@
     ctx.fillStyle='#cdeef2';
     ctx.fillText(T.titleCold.toUpperCase(),W/2,232);
 
-    const fx=110,fy=272,fw=W-220,fh=830;
+    const fx=110,fy=272,fw=W-220,fh=fw*(540/370);
     drawFridgeCard(ctx,fx,fy,fw,fh,pengImg,paperHex);
 
     ctx.font='700 32px Inter, sans-serif';
@@ -652,6 +722,22 @@
     ctx.font='600 22px Inter, sans-serif';
     ctx.fillStyle='rgba(205,238,242,.75)';
     ctx.fillText('zica-da-copa.darlon.workers.dev',W/2,fy+fh+102);
+
+    // QR code do link, pra quem receber a imagem (no story, no zap) abrir sem precisar copiar nada
+    const qr=qrcode(0,'M');
+    qr.addData(SITE_URL);
+    qr.make();
+    const modules=qr.getModuleCount(),cell=110/modules,quiet=cell*4,qrBox=110+quiet*2;
+    const qrX=W/2-qrBox/2,qrY=fy+fh+130;
+    roundRectPath(ctx,qrX,qrY,qrBox,qrBox,10);
+    ctx.fillStyle='#fff';ctx.fill();
+    ctx.save();
+    ctx.translate(qrX+quiet,qrY+quiet);
+    qr.renderTo2dContext(ctx,cell);
+    ctx.restore();
+    ctx.font='600 18px Inter, sans-serif';
+    ctx.fillStyle='rgba(205,238,242,.75)';
+    ctx.fillText(T.qrCaption,W/2,qrY+qrBox+34);
 
     return canvas;
   }
@@ -862,6 +948,12 @@
   shareBtn.addEventListener('click',async()=>{
     if(!notes.length){toastMsg(T.toastNeedShare);return;}
     toastMsg(T.toastGenerating);
+    // copia o link já de cara (perto do clique, pra manter a permissão do navegador),
+    // assim quem for postar no story do Instagram só precisa colar, sem voltar no site
+    let linkCopied=false;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      try{await navigator.clipboard.writeText(SITE_URL);linkCopied=true;}catch(err){}
+    }
     try{
       const canvas=await buildShareCanvas();
       canvas.toBlob(async blob=>{
@@ -872,14 +964,15 @@
         if(canTryShare){
           try{
             await navigator.share({files:[file],title:'Geladeira da Zica',text:T.shareMsg});
+            if(linkCopied)toastMsg(T.toastLinkCopied);
             return;
           }catch(err){
-            if(err&&err.name==='AbortError')return; // usuário cancelou o compartilhamento, não força download
+            if(err&&err.name==='AbortError'){if(linkCopied)toastMsg(T.toastLinkCopied);return;} // cancelou o compartilhamento, mas o link já ficou copiado
           }
         }
         const url=URL.createObjectURL(blob),a=document.createElement('a');
         a.href=url;a.download='geladeira-da-zica.png';a.click();URL.revokeObjectURL(url);
-        toastMsg(T.toastDownloaded);
+        toastMsg(linkCopied?T.toastDownloadedCopied:T.toastDownloaded);
       },'image/png');
     }catch(err){toastMsg(T.toastShareFail);console.error(err);}
   });
