@@ -948,16 +948,12 @@
   shareBtn.addEventListener('click',async()=>{
     if(!notes.length){toastMsg(T.toastNeedShare);return;}
     toastMsg(T.toastGenerating);
-    // copia o link em paralelo com a montagem da imagem: no mobile o navigator.share()
-    // só funciona perto do clique, então esperar o clipboard antes estourava esse prazo
-    // e o navegador caía direto no download em vez de abrir a folha de compartilhamento
-    let linkCopied=false;
-    const clipboardPromise=(navigator.clipboard&&navigator.clipboard.writeText)
-      ?navigator.clipboard.writeText(SITE_URL).then(()=>{linkCopied=true;}).catch(()=>{})
-      :Promise.resolve();
+    // não mexe no clipboard antes do navigator.share: no Chrome do iOS (WKWebView),
+    // chamar clipboard.writeText no mesmo clique derruba o share sheet com arquivo e
+    // ele cai direto pro download, mesmo copiando em paralelo. O link só é copiado
+    // depois do share (ou no fallback de download, onde não tem mais share pra atrapalhar).
     try{
       const canvas=await buildShareCanvas();
-      await clipboardPromise;
       canvas.toBlob(async blob=>{
         if(!blob){toastMsg(T.toastShareFail);return;}
         const file=new File([blob],'geladeira-da-zica.png',{type:'image/png'});
@@ -966,11 +962,17 @@
         if(canTryShare){
           try{
             await navigator.share({files:[file],title:'Geladeira da Zica',text:T.shareMsg});
-            if(linkCopied)toastMsg(T.toastLinkCopied);
+            if(navigator.clipboard&&navigator.clipboard.writeText){
+              navigator.clipboard.writeText(SITE_URL).then(()=>toastMsg(T.toastLinkCopied)).catch(()=>{});
+            }
             return;
           }catch(err){
-            if(err&&err.name==='AbortError'){if(linkCopied)toastMsg(T.toastLinkCopied);return;} // cancelou o compartilhamento, mas o link já ficou copiado
+            if(err&&err.name==='AbortError')return; // cancelou o compartilhamento, não força download
           }
+        }
+        let linkCopied=false;
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          try{await navigator.clipboard.writeText(SITE_URL);linkCopied=true;}catch(err){}
         }
         const url=URL.createObjectURL(blob),a=document.createElement('a');
         a.href=url;a.download='geladeira-da-zica.png';a.click();URL.revokeObjectURL(url);
