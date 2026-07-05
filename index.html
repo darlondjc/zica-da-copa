@@ -63,6 +63,7 @@
   .ad--foot{max-width:970px;min-height:110px}
 
   header{text-align:center;padding:22px 0 8px}
+  @media(max-width:480px){header{padding-top:58px}}
   .kicker{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;
     color:var(--frost);opacity:.75;margin-bottom:8px;border:1px solid rgba(205,238,242,.28);border-radius:100px;padding:5px 14px}
   h1{font-family:'Anton',sans-serif;font-weight:400;line-height:.92;font-size:clamp(44px,10vw,96px);
@@ -86,6 +87,18 @@
     background:linear-gradient(90deg,#fff,var(--enamel-shade));box-shadow:-8px 0 18px -6px rgba(0,0,0,.4),inset -3px 0 4px rgba(0,0,0,.12)}
   .door-edge::after{content:"";position:absolute;right:0;top:6%;bottom:6%;width:5px;border-radius:4px;
     background:repeating-linear-gradient(#3a3f45,#3a3f45 5px,#20242a 5px,#20242a 10px)} /* rubber gasket */
+
+  /* painel digital de temperatura, no alto da geladeira */
+  .temp-panel{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:8;
+    display:flex;align-items:center;gap:5px;background:#0d2126;border-radius:7px;padding:4px 12px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 2px 6px rgba(0,0,0,.4);
+    font-family:'Inter',sans-serif;font-weight:700;font-size:12px;letter-spacing:.03em;color:#7fe8ff;
+    text-shadow:0 0 6px rgba(127,232,255,.65)}
+
+  /* cubos de gelo soltos no fundo do freezer */
+  .ice-cube{position:absolute;z-index:2;border-radius:5px;pointer-events:none;transform:rotate(var(--r,0deg));
+    background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(190,230,240,.55) 60%,rgba(140,200,215,.4));
+    box-shadow:inset 0 2px 3px rgba(255,255,255,.9),inset 0 -3px 4px rgba(60,120,140,.35),0 3px 6px rgba(0,0,0,.25)}
 
   /* ---- INTERIOR CAVITY ---- */
   .interior{position:relative;height:100%;border-radius:14px;overflow:hidden;
@@ -115,7 +128,7 @@
   /* montinho de neve acumulada em cima da prateleira */
   .shelf::before{content:"";position:absolute;left:6%;width:34%;top:-5px;height:8px;border-radius:50% 50% 40% 40%/70% 70% 30% 30%;
     background:linear-gradient(180deg,#fff,rgba(255,255,255,.75));box-shadow:0 -1px 3px rgba(255,255,255,.5)}
-  .shelf:nth-child(3)::before{left:auto;right:10%}
+  .shelf:nth-child(3)::before,.shelf:nth-child(5)::before{left:auto;right:10%}
 
   #board{position:absolute;inset:0;z-index:5;pointer-events:none}
   #board > *{pointer-events:auto}
@@ -157,7 +170,7 @@
     30%{transform:rotate(9deg) translate(3px,0)}45%{transform:rotate(-8deg) translate(-2px,1px)}
     60%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
 
-  .empty-hint{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  .empty-hint{position:absolute;left:0;right:0;top:30%;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:10px;text-align:center;color:#0d4350;opacity:.7;font-size:14px;font-weight:600;line-height:1.4;padding:0 34px;pointer-events:none}
   .hint-arrow::before{content:"→";display:block;font-size:22px;line-height:1;animation:hintBounceX 1.6s ease-in-out infinite}
   @media(max-width:760px){.hint-arrow::before{content:"↓";animation-name:hintBounceY}}
@@ -220,12 +233,18 @@
   <div class="stage">
     <div class="fridge-area">
       <div class="fridge" id="fridge">
+        <div class="temp-panel" aria-hidden="true">❄ <span>-18°C</span></div>
         <div class="door-edge"></div>
         <div class="interior">
           <div id="snow"></div>
-          <div class="shelf" style="top:34%"></div>
-          <div class="shelf" style="top:60%"></div>
-          <div class="shelf" style="top:86%"></div>
+          <div class="shelf" style="top:26%"></div>
+          <div class="shelf" style="top:48%"></div>
+          <div class="shelf" style="top:68%"></div>
+          <div class="shelf" style="top:88%"></div>
+          <div class="ice-cube" style="left:8%;bottom:3%;width:20px;height:20px;--r:-8deg"></div>
+          <div class="ice-cube" style="left:22%;bottom:1%;width:15px;height:15px;--r:14deg"></div>
+          <div class="ice-cube" style="right:26%;bottom:4%;width:23px;height:23px;--r:7deg"></div>
+          <div class="ice-cube" style="right:12%;bottom:1.5%;width:14px;height:14px;--r:-16deg"></div>
           <div id="board">
             <div class="empty-hint" id="hint">
               <span id="hintText">Tá geladinho aqui dentro.<br>Escreve um nome e clica em <strong>"Jogar no freezer"</strong>.</span>
@@ -381,7 +400,7 @@
   const pageLoadedAt=Date.now();
   const STORAGE_KEY='zicaFreezerNotes';
   // shelf surface positions (fraction of interior height where a shelf top sits)
-  const shelves=[0.34,0.60,0.86], shelfLoad=[0,0,0];
+  const shelves=[0.26,0.48,0.68,0.88], shelfLoad=[0,0,0,0];
 
   // ---- SNOW ----
   const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -497,7 +516,7 @@
       roundRectPath(ctx,ix+iw*0.02,sy,iw*0.96,7,4);ctx.fill();
       ctx.fillStyle='rgba(255,255,255,.95)';
       ctx.beginPath();
-      const capX=i===1?ix+iw*0.74:ix+iw*0.24;
+      const capX=(i%2===1)?ix+iw*0.74:ix+iw*0.24;
       ctx.ellipse(capX,sy-3,iw*0.15,6,0,0,Math.PI*2);ctx.fill();
     });
 
