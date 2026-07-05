@@ -105,6 +105,11 @@
       inset 2px 2px 4px rgba(255,255,255,.85),0 3px 5px rgba(0,0,0,.2)}
   .ice-cube::after{content:"";position:absolute;left:-30%;right:-30%;bottom:-24%;height:38%;z-index:-1;
     border-radius:50%;background:radial-gradient(closest-side,rgba(210,240,248,.6),transparent 75%)}
+  .ice-cube.no-puddle::after{content:none}
+  /* pilha: cubos agrupados em monte, em vez de soltos e espalhados */
+  .ice-pile{position:absolute;z-index:2}
+  .ice-pile .ice-cube{position:absolute}
+  .ice-pile.on-shelf{z-index:4} /* fica por cima da prateleira (z-index:3), igual pousaria em cima dela */
 
   /* ---- INTERIOR CAVITY ---- */
   .interior{position:relative;height:100%;border-radius:14px;overflow:hidden;
@@ -144,6 +149,8 @@
     word-break:break-word;background:var(--paper-a);box-shadow:0 9px 14px -6px rgba(0,0,0,.5);
     display:flex;align-items:center;justify-content:center;transform-origin:bottom center;
     clip-path:polygon(2% 0,98% 3%,100% 96%,4% 100%,0 40%)}
+  @media(max-width:760px){.note{font-size:19px}}
+  .note.editing{box-shadow:0 9px 14px -6px rgba(0,0,0,.5),0 0 0 3px rgba(255,255,255,.9),0 0 0 6px rgba(226,58,46,.7)}
   .note .frost{position:absolute;inset:0;pointer-events:none;
     background:radial-gradient(60% 50% at 20% 10%,rgba(255,255,255,.75),transparent 60%),
                radial-gradient(50% 40% at 90% 90%,rgba(255,255,255,.6),transparent 60%);
@@ -216,7 +223,10 @@
   .btn--zicar:hover{filter:brightness(1.06)}
   .counter{text-align:center;margin-top:14px;font-size:13px;opacity:.8}.counter b{color:#fff}
   .btn--share{margin-top:16px;background:linear-gradient(180deg,#fff,var(--frost));color:var(--ice-deep);
-    box-shadow:0 10px 24px -10px rgba(205,238,242,.7),inset 0 1px 0 rgba(255,255,255,.85);font-size:16px;padding:15px}
+    box-shadow:0 10px 24px -10px rgba(205,238,242,.7),inset 0 1px 0 rgba(255,255,255,.85);font-size:16px;padding:15px;
+    display:flex;align-items:center;justify-content:center;gap:10px}
+  .btn--share .share-icon{flex:none;width:20px;height:20px;display:inline-flex}
+  .btn--share .share-icon svg{width:100%;height:100%;display:block}
   .btn--share:hover{filter:brightness(1.03)}
   .btn--share.ready{animation:sharePulse 2.2s ease-in-out infinite}
   @keyframes sharePulse{0%,100%{box-shadow:0 10px 24px -10px rgba(205,238,242,.7),inset 0 1px 0 rgba(255,255,255,.85)}
@@ -257,10 +267,16 @@
           <div class="shelf" style="top:48%"></div>
           <div class="shelf" style="top:68%"></div>
           <div class="shelf" style="top:88%"></div>
-          <div class="ice-cube" style="left:8%;bottom:3%;width:22px;height:22px;--r:-8deg"></div>
-          <div class="ice-cube" style="left:22%;bottom:1%;width:17px;height:17px;--r:14deg"></div>
-          <div class="ice-cube" style="right:26%;bottom:4%;width:25px;height:25px;--r:7deg"></div>
-          <div class="ice-cube" style="right:12%;bottom:1.5%;width:16px;height:16px;--r:-16deg"></div>
+          <!-- pilha maior pousada em cima da 3ª prateleira, no lugar de onde o 3º pinguim saiu -->
+          <div class="ice-pile on-shelf" style="left:14%;bottom:32%">
+            <div class="ice-cube" style="left:0;bottom:0;width:26px;height:26px;--r:-8deg"></div>
+            <div class="ice-cube" style="left:20px;bottom:2px;width:23px;height:23px;--r:10deg"></div>
+            <div class="ice-cube no-puddle" style="left:9px;bottom:19px;width:19px;height:19px;--r:-4deg"></div>
+          </div>
+          <div class="ice-pile" style="right:10%;bottom:1.5%">
+            <div class="ice-cube" style="left:0;bottom:0;width:20px;height:20px;--r:12deg"></div>
+            <div class="ice-cube no-puddle" style="left:12px;bottom:11px;width:15px;height:15px;--r:-11deg"></div>
+          </div>
           <div id="board">
             <div class="empty-hint" id="hint">
               <span id="hintText">Tá geladinho aqui dentro.<br>Escreve um nome e clica em <strong>"Jogar no freezer"</strong>.</span>
@@ -287,7 +303,11 @@
       </div>
       <button class="btn btn--zicar" id="zicar">🥶 Jogar no freezer</button>
       <p class="counter"><span id="counterPre">Você já congelou </span><b id="count">0</b><span id="counterPost"></span></p>
-      <button class="btn btn--share" id="share">❄️ Compartilhar</button>
+      <button class="btn btn--share" id="share">
+        <span class="share-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#25D366"/><path fill="#fff" d="M12 5.5a6.5 6.5 0 00-5.6 9.8L5.5 18.5l3.3-.9A6.5 6.5 0 1012 5.5zm3.9 9.3c-.2.5-1 1-1.4 1-.4 0-.8.1-2.6-.6-2.2-.9-3.6-3.1-3.7-3.3-.1-.1-.9-1.2-.9-2.3 0-1.1.6-1.6.8-1.9.2-.2.4-.3.6-.3h.4c.1 0 .3 0 .5.4l.6 1.5c.1.1.1.3 0 .4l-.3.4c-.1.1-.2.3-.1.4.2.4.7 1.1 1.4 1.7.9.8 1.6 1 1.8 1.1.2.1.3.1.5-.1l.5-.6c.2-.2.3-.2.5-.1l1.3.6c.1.1.3.1.3.3.1.2.1.7-.1 1.2z"/></svg></span>
+        <span id="shareLabel">Compartilhar</span>
+        <span class="share-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><defs><linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#FEDA75"/><stop offset=".3" stop-color="#FA7E1E"/><stop offset=".6" stop-color="#D62976"/><stop offset=".8" stop-color="#962FBF"/><stop offset="1" stop-color="#4F5BD5"/></linearGradient></defs><rect x="1" y="1" width="22" height="22" rx="6" fill="url(#igGrad)"/><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3.4" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="12" cy="12" r="3.1" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="17" cy="7" r="1.1" fill="#fff"/></svg></span>
+      </button>
       <button class="link-clear" id="clear">Limpar tudo</button>
     </div>
   </div>
@@ -317,7 +337,7 @@
       panelTitle:'Manda pro gelo',panelSub:'Um nome por papel. Pode ser jogador, técnico ou seleção inteira.',
       nameLabel:'Nome da vítima',namePlaceholder:'Ex: seleção rival...',colorLabel:'Cor do papel',
       zicarBtn:'🥶 Jogar no freezer',counterPre:'Você já congelou ',counterPost:'',
-      shareBtn:'❄️ Compartilhar',clearBtn:'Limpar tudo',
+      shareBtn:'Compartilhar',clearBtn:'Limpar tudo',
       hintHTML:'Tá geladinho aqui dentro.<br>Escreve um nome e clica em <strong>"Jogar no freezer"</strong>.',
       hintArrowLabel:'Rolar até o formulário',
       footerText:'Feito na zoeira pra Copa 2026. A zica não tem garantia científica. 😂',
@@ -326,7 +346,8 @@
       toastFull:'Freezer lotado! Já deu 🥶',toastCleared:'Freezer limpo 🧽',
       toastNeedShare:'Congela alguém antes de compartilhar 😉',toastGenerating:'Gerando imagem...',
       toastDownloaded:'Imagem baixada! 📥',toastShareFail:'Não rolou gerar a imagem 😕',
-      shareMsg:'Me ajuda a zicar os adversários você também 🥶'},
+      shareMsg:'Me ajuda a zicar os adversários você também 🥶',
+      editBtn:'💾 Salvar edição',toastEdited:'✏️ Nome atualizado'},
     en:{htmlLang:'en',docTitle:"Zica's Freezer — the World Cup's official jinx",
       kicker:"The World Cup's official jinx",titleMain:"Zica's",titleCold:'Freezer',
       tagline:'Write the name, toss it in the freezer, and let it chill with the penguins. The rest is out of your hands. 🥶',
@@ -342,7 +363,8 @@
       toastFull:"Freezer's full! That's enough 🥶",toastCleared:'Freezer cleared 🧽',
       toastNeedShare:'Freeze someone before sharing 😉',toastGenerating:'Generating image...',
       toastDownloaded:'Image downloaded! 📥',toastShareFail:"Couldn't generate the image 😕",
-      shareMsg:'Help me jinx this one too 🥶'},
+      shareMsg:'Help me jinx this one too 🥶',
+      editBtn:'💾 Save edit',toastEdited:'✏️ Name updated'},
     es:{htmlLang:'es',docTitle:'El Congelador de la Zica — la gafe oficial del Mundial',
       kicker:'La gafe oficial del Mundial',titleMain:'El Congelador',titleCold:'de la Zica',
       tagline:'Escribe el nombre, tíralo al fondo del congelador y déjalo helando con los pingüinos. El resto ya no depende de ti. 🥶',
@@ -358,7 +380,8 @@
       toastFull:'¡Congelador lleno! Ya fue 🥶',toastCleared:'Congelador limpio 🧽',
       toastNeedShare:'Congela a alguien antes de compartir 😉',toastGenerating:'Generando imagen...',
       toastDownloaded:'¡Imagen descargada! 📥',toastShareFail:'No se pudo generar la imagen 😕',
-      shareMsg:'Ayudame a hacerle mufa a este también 🥶'},
+      shareMsg:'Ayudame a hacerle mufa a este también 🥶',
+      editBtn:'💾 Guardar edición',toastEdited:'✏️ Nombre actualizado'},
     de:{htmlLang:'de',docTitle:'Der Gefrierschrank der Zica — der offizielle Fluch der WM',
       kicker:'Der offizielle Fluch der WM',titleMain:'Der Gefrierschrank',titleCold:'der Zica',
       tagline:'Schreib den Namen auf, wirf ihn ins Gefrierfach und lass ihn bei den Pinguinen frieren. Der Rest liegt nicht mehr in deiner Hand. 🥶',
@@ -374,7 +397,8 @@
       toastFull:'Gefrierfach ist voll! Das reicht 🥶',toastCleared:'Gefrierfach geleert 🧽',
       toastNeedShare:'Friere zuerst jemanden ein, bevor du teilst 😉',toastGenerating:'Bild wird erstellt...',
       toastDownloaded:'Bild heruntergeladen! 📥',toastShareFail:'Bild konnte nicht erstellt werden 😕',
-      shareMsg:'Hilf mir, den hier auch zu verfluchen 🥶'},
+      shareMsg:'Hilf mir, den hier auch zu verfluchen 🥶',
+      editBtn:'💾 Bearbeitung speichern',toastEdited:'✏️ Name aktualisiert'},
     fr:{htmlLang:'fr',docTitle:'Le Congélateur de la Zica — la malédiction officielle de la Coupe du Monde',
       kicker:'La malédiction officielle de la Coupe du Monde',titleMain:'Le Congélateur',titleCold:'de la Zica',
       tagline:'Écris le nom, jette-le au fond du congélateur et laisse-le geler avec les pingouins. Le reste ne dépend plus de toi. 🥶',
@@ -390,7 +414,8 @@
       toastFull:'Congélateur plein ! Ça suffit 🥶',toastCleared:'Congélateur vidé 🧽',
       toastNeedShare:'Congèle quelqu\'un avant de partager 😉',toastGenerating:"Génération de l'image...",
       toastDownloaded:'Image téléchargée ! 📥',toastShareFail:"Impossible de générer l'image 😕",
-      shareMsg:'Aide-moi à jeter la malédiction sur celui-là aussi 🥶'}
+      shareMsg:'Aide-moi à jeter la malédiction sur celui-là aussi 🥶',
+      editBtn:'💾 Enregistrer la modification',toastEdited:'✏️ Nom mis à jour'}
   };
   const LOCALE=ZicaI18N.detectLocale();
   const T=I18N[LOCALE];
@@ -409,7 +434,7 @@
   zicarBtn.textContent=T.zicarBtn;
   document.getElementById('counterPre').textContent=T.counterPre;
   document.getElementById('counterPost').textContent=T.counterPost;
-  shareBtn.textContent=T.shareBtn;
+  document.getElementById('shareLabel').textContent=T.shareBtn;
   clearBtn.textContent=T.clearBtn;
   document.getElementById('hintText').innerHTML=T.hintHTML;
   document.getElementById('hintArrow').setAttribute('aria-label',T.hintArrowLabel);
@@ -418,7 +443,7 @@
   document.getElementById('navPrivacidade').textContent=T.navPrivacidade;
 
   const paperColors={a:'var(--paper-a)',b:'var(--paper-b)',c:'var(--paper-c)',d:'var(--paper-d)'};
-  let selColor='a', notes=[], penguins=[];
+  let selColor='a', notes=[], penguins=[], editingNote=null;
   const pageLoadedAt=Date.now();
   const STORAGE_KEY='zicaFreezerNotes';
   // shelf surface positions (fraction of interior height where a shelf top sits)
@@ -633,7 +658,7 @@
 
   function placePenguins(){
     const boardH=board.clientHeight, boardW=board.clientWidth;
-    const spots=[{sh:0,x:0.10},{sh:1,x:0.74},{sh:2,x:0.16}];
+    const spots=[{sh:0,x:0.10},{sh:1,x:0.74},{sh:3,x:0.16}];
     spots.forEach((sp,i)=>{
       const p=document.createElement('div');
       p.className='peng'+(reduce?'':' shiver');
@@ -700,6 +725,16 @@
   function toastMsg(t){toast.textContent=t;toast.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),1800);}
   function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+  // fonte do papelzinho encolhe conforme o nome cresce, pra não estourar a largura fixa (mais agressivo no mobile)
+  function computeNoteFontSize(name){
+    const isMobile=window.matchMedia('(max-width:760px)').matches;
+    const size=isMobile?19:23;
+    const longestWord=name.split(' ').reduce((a,w)=>w.length>a.length?w:a,'');
+    const heavy=Math.max(longestWord.length,Math.ceil(name.length/1.6));
+    const shrink=heavy>8?Math.min(size-12,(heavy-8)*1.1):0;
+    return Math.round((size-shrink)*10)/10;
+  }
+
   function pickSpot(){
     const bw=board.clientWidth, noteW=92;
     // escolhe a prateleira menos cheia
@@ -727,10 +762,12 @@
     el.style.left=x+'px';el.style.top=y+'px';
     el.style.setProperty('--rot',rot+'deg');el.style.transform=`rotate(${rot}deg)`;
     el.style.background=paperColors[color];
+    el.style.fontSize=computeNoteFontSize(name)+'px';
     el.innerHTML=`<span class="frozen-tag">${T.noGelo}</span>${escapeHtml(name)}<span class="frost"></span>`;
     board.appendChild(el);
     if(!restore)el.addEventListener('animationend',()=>el.classList.remove('pop'),{once:true});
     makeDraggable(el);
+    el.addEventListener('dblclick',()=>startEdit(el));
     const note={el,name,color,sh,xFrac:x/bw,rot,createdAt};
     notes.push(note);countEl.textContent=notes.length;
     updateNoteFrost(note);
@@ -744,23 +781,70 @@
   }
 
   function makeDraggable(el){
-    let sx,sy,ox,oy,drag=false;
-    const down=e=>{drag=true;el.style.cursor='grabbing';el.style.zIndex=99;const p=pt(e);sx=p.x;sy=p.y;ox=parseFloat(el.style.left);oy=parseFloat(el.style.top);e.preventDefault();};
-    const move=e=>{if(!drag)return;const p=pt(e);el.style.left=(ox+(p.x-sx))+'px';el.style.top=(oy+(p.y-sy))+'px';};
-    const up=()=>{
+    let sx,sy,ox,oy,drag=false,moved=false,lastTapTime=0,lastTapX=0,lastTapY=0;
+    const down=e=>{drag=true;moved=false;el.style.cursor='grabbing';el.style.zIndex=99;const p=pt(e);sx=p.x;sy=p.y;ox=parseFloat(el.style.left);oy=parseFloat(el.style.top);e.preventDefault();};
+    const move=e=>{
+      if(!drag)return;const p=pt(e);
+      if(Math.abs(p.x-sx)>6||Math.abs(p.y-sy)>6)moved=true;
+      el.style.left=(ox+(p.x-sx))+'px';el.style.top=(oy+(p.y-sy))+'px';
+    };
+    const up=e=>{
       if(!drag)return;drag=false;el.style.cursor='grab';el.style.zIndex='';
       const note=notes.find(n=>n.el===el);
       if(note){note.xFrac=parseFloat(el.style.left)/board.clientWidth;saveNotes();}
+      // no touch, dblclick nativo não dispara (o preventDefault do touchstart suprime os eventos sintéticos de mouse),
+      // então o duplo toque é detectado manualmente aqui
+      if(!moved&&e&&e.type==='touchend'){
+        const p=pt(e),now=Date.now();
+        if(now-lastTapTime<350&&Math.abs(p.x-lastTapX)<24&&Math.abs(p.y-lastTapY)<24){
+          lastTapTime=0;startEdit(el);
+        }else{lastTapTime=now;lastTapX=p.x;lastTapY=p.y;}
+      }
     };
     el.addEventListener('mousedown',down);el.addEventListener('touchstart',down,{passive:false});
     window.addEventListener('mousemove',move);window.addEventListener('touchmove',move,{passive:false});
     window.addEventListener('mouseup',up);window.addEventListener('touchend',up);
-    function pt(e){const t=e.touches?e.touches[0]:e;return{x:t.clientX,y:t.clientY};}
+    function pt(e){
+      if(e.touches&&e.touches.length)return{x:e.touches[0].clientX,y:e.touches[0].clientY};
+      if(e.changedTouches&&e.changedTouches.length)return{x:e.changedTouches[0].clientX,y:e.changedTouches[0].clientY};
+      return{x:e.clientX,y:e.clientY};
+    }
   }
 
+  // dois cliques no papelzinho abrem ele pra edição, rolando até o formulário
+  function startEdit(el){
+    const note=notes.find(n=>n.el===el);
+    if(!note)return;
+    editingNote=note;
+    input.value=note.name;
+    selColor=note.color;
+    document.querySelectorAll('.swatch').forEach(s=>s.classList.toggle('sel',s.dataset.c===note.color));
+    document.querySelectorAll('.note.editing').forEach(n=>n.classList.remove('editing'));
+    el.classList.add('editing');
+    zicarBtn.textContent=T.editBtn;
+    document.querySelector('.pad').scrollIntoView({behavior:'smooth',block:'start'});
+    input.focus({preventScroll:true});
+  }
+  function stopEdit(){
+    if(!editingNote)return;
+    editingNote.el.classList.remove('editing');
+    editingNote=null;
+    zicarBtn.textContent=T.zicarBtn;
+  }
   function submit(){
     const name=input.value.trim();
     if(!name){input.focus();toastMsg(T.toastNeedName);return;}
+    if(editingNote){
+      editingNote.name=name;editingNote.color=selColor;
+      editingNote.el.style.background=paperColors[selColor];
+      editingNote.el.style.fontSize=computeNoteFontSize(name)+'px';
+      editingNote.el.innerHTML=`<span class="frozen-tag">${T.noGelo}</span>${escapeHtml(name)}<span class="frost"></span>`;
+      stopEdit();
+      saveNotes();
+      toastMsg(T.toastEdited);
+      input.value='';input.blur();
+      return;
+    }
     if(notes.length>=36){toastMsg(T.toastFull);return;}
     addNote(name);input.value='';input.focus();
   }
@@ -770,6 +854,7 @@
     if(!notes.length)return;
     notes.forEach(n=>n.el.remove());notes=[];shelfLoad[0]=shelfLoad[1]=shelfLoad[2]=0;
     countEl.textContent=0;hint.style.display='';shareBtn.classList.remove('ready');
+    stopEdit();input.value='';
     localStorage.removeItem(STORAGE_KEY);
     toastMsg(T.toastCleared);
   });
